@@ -44,11 +44,15 @@ class Work::TimeEntriesImportFromText
     private
 
     def match
-      time_entry_line_regex.match(text_line)
+      @match ||= time_entry_line_regex.match(text_line)
     end
 
     def work_unit
-      nil
+      context.work_unit
+    end
+
+    def context
+      Work::TimeEntryContext.new(match[:context])
     end
 
     def time_entry_line_regex

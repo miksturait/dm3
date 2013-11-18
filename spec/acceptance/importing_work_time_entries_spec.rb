@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Importing Work Time Entries", :focus do
+describe "Importing Work Time Entries" do
   let(:tab_separated_time_entries) {
     %q{
 2013-11-18	08:30	09:45	sourcyx-manage
