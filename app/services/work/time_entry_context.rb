@@ -14,5 +14,8 @@
 # and when node is redirecting to an external source e.g. youtrack, we are delegating
 # context identification to specialize class
 
-class Workload::TimeEntryContext
+class Work::TimeEntryContext < Struct.new(:context)
+  def work_unit
+
+  end
 end
