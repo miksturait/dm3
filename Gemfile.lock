@@ -26,6 +26,8 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 0.3.37)
     addressable (2.3.5)
+    ancestry (2.0.0)
+      activerecord (>= 3.0.0)
     arel (4.0.1)
     atomic (1.1.14)
     better_errors (1.0.1)
@@ -237,6 +239,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  ancestry
   better_errors
   binding_of_caller
   bootstrap-sass (~> 2.3.2.2)

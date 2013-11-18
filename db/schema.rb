@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131023105955) do
+ActiveRecord::Schema.define(version: 20131118165709) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,5 +42,16 @@ ActiveRecord::Schema.define(version: 20131023105955) do
   end
 
   add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", using: :btree
+
+  create_table "work_units", force: true do |t|
+    t.string   "wuid"
+    t.string   "name"
+    t.string   "ancestry"
+    t.string   "type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "work_units", ["ancestry"], name: "index_work_units_on_ancestry", using: :btree
 
 end
