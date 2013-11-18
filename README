@@ -1,19 +1,53 @@
-Dm3
-========================
+# DiamondMine3-Work-Track&Schedule (DM3-WTS)
 
-This application was generated with the rails_apps_composer gem:
-https://github.com/RailsApps/rails_apps_composer
-provided by the RailsApps Project:
-http://railsapps.github.io/
+Simply Scheduling per week / work unit / co-worker.
+Additional it allowing to track workload per day / work unit / co-worker
 
-________________________
+## Prerequisites
 
-Recipes:
-["apps4", "controllers", "core", "email", "extras", "frontend", "gems", "git", "init", "models", "prelaunch", "railsapps", "readme", "routes", "saas", "setup", "testing", "views"]
+#### Environment
 
-Preferences:
-{:git=>true, :apps4=>"none", :dev_webserver=>"puma", :prod_webserver=>"puma", :database=>"postgresql", :templates=>"haml", :unit_test=>"rspec", :integration=>"rspec-capybara", :continuous_testing=>"guard", :fixtures=>"factory_girl", :frontend=>"bootstrap", :bootstrap=>"sass", :email=>"none", :authentication=>"omniauth", :omniauth_provider=>"google_oauth2", :authorization=>"cancan", :form_builder=>"simple_form", :starter_app=>"home_app", :rvmrc=>false, :quiet_assets=>true, :local_env_file=>true, :better_errors=>true, :ban_spiders=>true}
+* rvm or any other ruby manager that read .ruby-version files
 
-________________________
+#### Database setup
 
-License
+````bash
+rake db:setup
+````
+
+## Testing
+
+#### Running tests
+
+    bundle exec spec
+
+#### Test accounts
+
+* *What are the test accounts provided by seed file (login/password)*
+
+## Deployment
+
+#### Staging
+
+
+#### Production
+
+
+## To the rescue!
+
+#### Production console
+
+#### Logs
+
+#### Restarting server
+
+#### Database dump
+
+#### Other
+
+
+## Contact information
+
+* Michał Czyż @cs3b
+
+
