@@ -24,7 +24,11 @@ class Work::TimeEntryContext < Struct.new(:context_code)
   end
 
   def project
-    @project ||= Project.where(wuid: project_wuid).first!
+    begin
+      @project ||= Project.where(wuid: project_wuid).first!
+    rescue ActiveRecord::RecordNotFound
+      raise ActiveRecord::RecordNotFound, "No Project defined with id: #{project_wuid}"
+    end
   end
 
   private

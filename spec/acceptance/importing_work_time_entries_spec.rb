@@ -11,29 +11,34 @@ describe "Importing Work Time Entries" do
 2013-09-15	09:30	17:30	selleo-1514 working merit money pay
     }
   }
-
-  let(:time_entries) {
+  before do
+    %w(hrm process_and_tools mikstura.it selleo).each do |wuid|
+      create(:project, wuid: wuid)
+    end
+  end
+  let!(:sourcyx_project) { create(:project, wuid: 'sourcyx') }
+  let(:sourcyx_active_phase) { sourcyx_project.active_phase }
+  let!(:time_entries) {
     Work::TimeEntriesImportFromText.parse(tab_separated_time_entries)
   }
 
   let(:sourcyx_manage_time_entry) { time_entries.first }
-  pending "work unit unfinished" do
-    let(:sourcyx_manage_work_unit) { Work::Unit.where(wuid: 'sourcyx-manage') }
-  end
+  let(:sourcyx_manage_work_unit) { sourcyx_active_phase.units.where(wuid: 'manage').first }
   it { expect(sourcyx_manage_time_entry).to eq({
                                                    date: '2013-11-18',
                                                    start_at: '08:30',
                                                    end_at: '09:45',
-                                                   work_unit: nil,
+                                                   work_unit: sourcyx_manage_work_unit,
                                                    comment: nil
                                                }) }
 
   let(:sourcyx_spd_117_time_entry) { time_entries[4] }
+  let(:sourcyx_spd_117_work_unit) { sourcyx_active_phase.units.where(wuid: 'spd-117').first }
   it { expect(sourcyx_spd_117_time_entry).to eq({
                                                     date: '2013-09-02',
                                                     start_at: '10:45',
                                                     end_at: '11:00',
-                                                    work_unit: nil,
+                                                    work_unit: sourcyx_spd_117_work_unit,
                                                     comment: 'writing specs'
                                                 }) }
 

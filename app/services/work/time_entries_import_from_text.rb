@@ -37,7 +37,7 @@ class Work::TimeEntriesImportFromText
           start_at: match[:start_at],
           end_at: match[:end_at],
           work_unit: work_unit,
-          comment: match[:comment]
+          comment: comment
       }
     end
 
@@ -51,12 +51,16 @@ class Work::TimeEntriesImportFromText
       context.work_unit
     end
 
+    def comment
+      match[:comment].strip if match[:comment]
+    end
+
     def context
       Work::TimeEntryContext.new(match[:context])
     end
 
     def time_entry_line_regex
-      /^(?<date>[^\s]{10})\s+(?<start_at>[^\s]{5})\s+(?<end_at>[^\s]{5})\s+(?<context>[^\s]+)[^(\n)](?<comment>[^(\n)]+)?$/
+      /^(?<date>[^\s]{10})\s+(?<start_at>[^\s]{5})\s+(?<end_at>[^\s]{5})\s+(?<context>[^\s]+)(?<comment>[^(\n)]+)?$/
     end
   end
 end
