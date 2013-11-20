@@ -50,7 +50,7 @@ class Work::TimeEntryContext < Struct.new(:context_code)
     end
 
     def context_regex
-      /^(?<project>[^\-]+)(\-(?<nofollow>(jira|nofollow|ext)::)?(?<unit>[^\n]+))?$/
+      /^(?<project>[^\-]+)(\-(?<unit>[^\n]+))?$/
     end
   end
 end
