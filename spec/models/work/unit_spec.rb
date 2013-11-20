@@ -8,6 +8,7 @@ describe Work::Unit do
   #   => project within customer
   #   => phase have no wuid
   #   => all children within phase
+  # * wuid can't have '-' as the value
   pending "validation"
 
 end
