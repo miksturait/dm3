@@ -2,12 +2,8 @@ class Work::TimeImport < Struct.new(:user, :time_entries_data)
 
   def import!
     ActiveRecord::Base.transaction do
-      begin
-        time_entries_attrs.each do |time_entry_attrs|
-          create_time_entry(time_entry_attrs)
-        end
-      rescue ActiveRecord::RecordNotFound
-        ActiveRecord::Base.rollback
+      time_entries_attrs.each do |time_entry_attrs|
+        create_time_entry(time_entry_attrs)
       end
     end
   end

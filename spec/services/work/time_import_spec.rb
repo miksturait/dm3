@@ -81,4 +81,11 @@ describe Work::TimeImport do
     let(:sourcyx_workload) { sourcyx_project.time_entries.sum(:duration) }
     it { expect(sourcyx_workload).to eq(120) }
   end
+
+  describe "Exceptions handling" do
+    pending "any single exceptions should revert all changes"
+    pending "still exceptions should not be rescued"
+    pending "safe import should not raise exception"
+    pending "and set valid to false, and convert exception to text message for end user"
+  end
 end
