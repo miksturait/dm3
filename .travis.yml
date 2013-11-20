@@ -2,7 +2,8 @@ language: ruby
 bundler_args: --without development --deployment
 cache: bundler
 rvm:
-- rbx-2.2.0
+- rbx-2.0.0
+- 2.0.0
 before_install:
 - 'echo ''gem: --no-ri --no-rdoc'' > ~/.gemrc'
 before_script:
