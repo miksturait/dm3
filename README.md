@@ -1,6 +1,6 @@
-# DiamondMine3-Work-Track&Schedule (DM3-WTS)
+# DM3-WTS [![Build Status](https://travis-ci.org/miksturait/dm3.png?branch=master)](https://travis-ci.org/miksturait/dm3) [![Code Climate](https://codeclimate.com/github/miksturait/dm3.png)](https://codeclimate.com/github/miksturait/dm3)
 
-[![Code Climate](https://codeclimate.com/github/miksturait/dm3.png)](https://codeclimate.com/github/miksturait/dm3)
+DiamondMine3-Work-Track&Schedule
 
 Simply Scheduling per week / work unit / co-worker.
 Additional it allowing to track workload per day / work unit / co-worker
