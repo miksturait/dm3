@@ -28,9 +28,8 @@ describe Work::TimeEntriesImportFromText do
     let(:sourcyx_manage_work_unit) { sourcyx_active_phase.units.where(wuid: 'manage').first }
     it { expect(sourcyx_manage_time_entry).
         to eq({
-                  date: '2013-11-18',
-                  start_at: '08:30',
-                  end_at: '09:45',
+                  start_at: '2013-11-18 08:30',
+                  end_at: '2013-11-18 09:45',
                   work_unit: sourcyx_manage_work_unit,
                   comment: nil
               }) }
@@ -41,9 +40,8 @@ describe Work::TimeEntriesImportFromText do
     let(:sourcyx_spd_117_work_unit) { sourcyx_active_phase.units.where(wuid: 'spd-117').first }
     it { expect(sourcyx_spd_117_time_entry).
         to eq({
-                  date: '2013-09-02',
-                  start_at: '10:45',
-                  end_at: '11:00',
+                  start_at: '2013-09-02 10:45',
+                  end_at: '2013-09-02 11:00',
                   work_unit: sourcyx_spd_117_work_unit,
                   comment: 'writing specs'
               }) }
