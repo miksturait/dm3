@@ -5,7 +5,7 @@ describe Work::TimeEntryContext do
   # * it have to find or create current phase
   # * within phase find or create work unit - ()if defined)
 
-  context "can't find a project" do
+  context "can't find a project - will raise an exception" do
     let(:work_unit) { Work::TimeEntryContext.new('hrm').work_unit }
 
     it { expect { work_unit }.to raise_error(ActiveRecord::RecordNotFound) }
@@ -18,7 +18,7 @@ describe Work::TimeEntryContext do
 
     it { expect(work_unit.project).to eq(ccc) }
 
-    context "can't find current phase" do
+    context "can't find current phase - will create a new one" do
       it { expect { work_unit }.to change { Phase.count }.from(0).to(1) }
     end
 
@@ -26,7 +26,7 @@ describe Work::TimeEntryContext do
       let!(:current_phase) { ccc.active_phase }
       it { expect { work_unit }.to_not change { Phase.count } }
 
-      context "no work unit defined" do
+      context "no work unit defined - will use current phase as work unit" do
         it { expect(work_unit).to eq(current_phase) }
       end
 
@@ -39,11 +39,13 @@ describe Work::TimeEntryContext do
           it { expect { work_unit }.to_not change { Work::Unit.count } }
         end
 
-        context "work of unit don't exist" do
+        context "work of unit don't exist - will create a new work unit" do
           it { expect(work_unit.wuid).to eq('manage') }
           it { expect { work_unit }.to change { current_phase.children.count }.from(0).to(1) }
         end
       end
+
+      pending "fetching work unit structure from youtrack"
     end
   end
 end

@@ -1,3 +1,4 @@
+# // TODO: this will not be part of that app
 # * belongs_to work::unit
 # * cash inflow
 # * cash amount with currency
