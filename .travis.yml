@@ -1,0 +1,13 @@
+language: ruby
+bundler_args: --without development --deployment
+cache: bundler
+rvm:
+- rbx
+before_install:
+- 'echo ''gem: --no-ri --no-rdoc'' > ~/.gemrc'
+before_script:
+- export RAILS_ENV=test
+- cp -f config/travis/database.yml config/database.yml
+- cp -f config/travis/application.yml config/application.yml
+- bundle exec rake db:create db:migrate
+script: bundle exec rspec --format=d
