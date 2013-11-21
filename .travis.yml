@@ -11,3 +11,6 @@ before_script:
 - cp -f config/travis/application.yml config/application.yml
 - bundle exec rake db:create db:migrate
 script: bundle exec rspec --format=d
+addons:
+  code_climate:
+    repo_token: b66d3637acb49b555183d7d1cfd11fc4ab5387de6e39e0fe4823e01c7416d4cd
