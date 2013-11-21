@@ -2,9 +2,20 @@ class Work::TimeEntry < ActiveRecord::Base
   belongs_to :user
   belongs_to :work_unit, class_name: 'Work::Unit'
 
+  before_validation :check_inclusion
   before_save :update_duration
 
+  validate :period, presence: true
+
+  def inclusive?
+    period && self.class.where(user_id: user_id).where(["period && tstzrange(?,?)", period.begin.to_s, period.end.to_s]).exists?
+  end
+
   private
+
+  def check_inclusion
+    errors[:period] << "overlaps already created record" if inclusive?
+  end
 
   def update_duration
     self.duration = calculate_minutes

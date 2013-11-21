@@ -11,8 +11,6 @@ require "sprockets/railtie"
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env)
 
-require 'pg_invalid_statement'
-
 module Dm3
   class Application < Rails::Application
 
@@ -26,6 +24,8 @@ module Dm3
       g.view_specs false
       g.helper_specs false
     end
+
+    config.active_record.schema_format = :sql
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
