@@ -11,6 +11,8 @@ require "sprockets/railtie"
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env)
 
+require 'pg_invalid_statement'
+
 module Dm3
   class Application < Rails::Application
 
