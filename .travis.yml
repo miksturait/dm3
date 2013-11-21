@@ -13,4 +13,4 @@ before_script:
 script: bundle exec rspec --format=d
 addons:
   code_climate:
-    repo_token: b66d3637acb49b555183d7d1cfd11fc4ab5387de6e39e0fe4823e01c7416d4cd
+    repo_token: 600186b44c043a8fbcd009d7a386fcd1f125613607e84a7629cabd7278f3760c
