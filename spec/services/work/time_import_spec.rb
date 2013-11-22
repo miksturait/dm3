@@ -82,10 +82,33 @@ describe Work::TimeImport do
     it { expect(sourcyx_workload).to eq(120) }
   end
 
-  describe "Exceptions handling" do
-    pending "any single exceptions should revert all changes"
-    pending "still exceptions should not be rescued"
-    pending "safe import should not raise exception"
-    pending "and set valid to false, and convert exception to text message for end user"
+  describe "Error messages" do
+    context "when time entries overlap" do
+      let(:time_entries_as_text) do
+        %q{
+2013-11-11	09:00	09:45	process_and_tools
+2013-11-05	15:00	16:30	hrm - topics / blocks
+2013-09-02	10:45	11:00	sourcyx-spd-117 writing specs
+2013-11-11	09:30	11:00	selleo-1514 working merit money pay
+  }
+      end
+
+      let(:time_entries) { Work::TimeImport.new(tom, time_entries_as_text) }
+      let!(:import) { time_entries.import! }
+
+      it { expect(Work::TimeEntry.count).to eq(0) }
+      it { expect(time_entries).to_not be_valid }
+      let(:time_entry_with_error) { time_entries.errors.first }
+      let(:error_messages) { time_entry_with_error.errors.messages }
+      let(:error_messages_for_period) { error_messages[:period]}
+
+      it { expect(time_entry_with_error.comment).to eq('working merit money pay') }
+      it { expect(error_messages_for_period).to eq(["overlaps already created record"]) }
+    end
+    context "when project not defined", :focus do
+
+      pending "it should not create even one time entry"
+      pending "proper error message should be attached to time entry"
+    end
   end
 end
