@@ -7,16 +7,25 @@ class Work::TimeEntry < ActiveRecord::Base
 
   validate :period, presence: true
 
+  scope :skip_self, ->(time_entry) do
+    where(["#{self.table_name}.id != ?", time_entry.id]) unless time_entry.new_record?
+  end
+  scope :overlapping_with, ->(range) { where(["period && tstzrange(?,?)", range.begin.to_s, range.end.to_s]) }
+
   def start_at
-    period.begin
+    period.begin if period
   end
 
   def end_at
-    period.end
+    period.end if period
   end
 
   def inclusive?
-    period && self.class.where(user_id: user_id).where(["period && tstzrange(?,?)", period.begin.to_s, period.end.to_s]).exists?
+    period &&
+        self.class.
+            skip_self(self).
+            where(user_id: user_id).
+            overlapping_with(period).exists?
   end
 
   private
