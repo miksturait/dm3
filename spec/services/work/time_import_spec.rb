@@ -34,18 +34,16 @@ describe Work::TimeImport do
     it { expect { import }.to change { Work::TimeEntry.count }.from(0).to(2) }
 
     context "fully imported" do
-      before do
-        import
-      end
+      before { import }
 
       let(:total_workload) { tom.time_entries.sum(:duration) }
       it { expect(total_workload).to eq(135) }
 
       describe "single time entry" do
         subject(:hrm_time_entry) { tom.time_entries.where(comment: '- coworkers communication').first }
-        it { expect(hrm_time_entry.start_at).to eq(Time.parse("2013-11-13	16:00")) }
-        it { expect(hrm_time_entry.end_at).to eq(Time.parse("2013-11-13	17:00")) }
-        it { expect(hrm_time_entry.duration).to eq(60) }
+        its(:start_at) { should eq(Time.parse("2013-11-13	16:00")) }
+        its(:end_at) { should eq(Time.parse("2013-11-13	17:00")) }
+        its(:duration) { should eq(60) }
       end
     end
   end
@@ -56,17 +54,16 @@ describe Work::TimeImport do
     it { expect { import }.to change { Work::TimeEntry.count }.from(0).to(5) }
 
     context "fully imported" do
-      before do
-        import
-      end
+      before { import }
+
       let(:total_workload) { simon.time_entries.sum(:duration) }
       it { expect(total_workload).to eq(750) }
 
       describe "single time entry" do
         subject(:hrm_time_entry) { simon.time_entries.where(comment: '- topics / blocks').first }
-        it { expect(hrm_time_entry.start_at).to eq(Time.parse("2013-11-05	15:00")) }
-        it { expect(hrm_time_entry.end_at).to eq(Time.parse("2013-11-05	16:30")) }
-        it { expect(hrm_time_entry.duration).to eq(90) }
+        its(:start_at) { should  eq(Time.parse("2013-11-05	15:00")) }
+        its(:end_at) { should eq(Time.parse("2013-11-05	16:30")) }
+        its(:duration) { should eq(90) }
       end
     end
   end
@@ -100,7 +97,7 @@ describe Work::TimeImport do
       it { expect(time_entries).to_not be_valid }
       let(:time_entry_with_error) { time_entries.errors.first }
       let(:error_messages) { time_entry_with_error.errors.messages }
-      let(:error_messages_for_period) { error_messages[:period]}
+      let(:error_messages_for_period) { error_messages[:period] }
 
       it { expect(time_entry_with_error.comment).to eq('working merit money pay') }
       it { expect(error_messages_for_period).to eq(["overlaps already created record"]) }
@@ -122,7 +119,7 @@ describe Work::TimeImport do
 
       let(:time_entry_with_error) { time_entries.errors.first }
       let(:error_messages) { time_entry_with_error.errors.messages }
-      let(:error_messages_for_work_unit) { error_messages[:work_unit_id]}
+      let(:error_messages_for_work_unit) { error_messages[:work_unit_id] }
       it { expect(time_entry_with_error.comment).to eq('writing specs') }
       it { expect(error_messages_for_work_unit).to eq(["No Project defined with id: thalamus"]) }
     end

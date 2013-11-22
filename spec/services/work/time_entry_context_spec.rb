@@ -10,9 +10,9 @@ describe Work::TimeEntryContext do
 
     it { expect(time_entry_context.work_unit).to be_nil }
 
-    let(:exception) { time_entry_context.exception[:work_unit_id].first }
-    it { expect(exception).to be_kind_of(ActiveRecord::RecordNotFound) }
-    it { expect(exception.message).to eq('No Project defined with id: hrm') }
+    subject(:exception) { time_entry_context.exception[:work_unit_id].first }
+    it { should be_kind_of(ActiveRecord::RecordNotFound) }
+    its(:message) { should eq('No Project defined with id: hrm') }
   end
 
   context "within project" do

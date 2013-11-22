@@ -27,13 +27,16 @@ class Work::TimeEntriesImportFromText
     end
 
     def start_at
-      Time.parse(
-          [match[:date], match[:start_at]].join(' '))
+      get_date_of(:start_at)
     end
 
     def end_at
+      get_date_of(:end_at)
+    end
+
+    def get_date_of(limit)
       Time.parse(
-          [match[:date], match[:end_at]].join(' '))
+          [match[:date], match[limit]].join(' '))
     end
 
     def comment

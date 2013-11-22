@@ -2,10 +2,10 @@ class Work::TimeEntry < ActiveRecord::Base
   attr_accessor :exception
 
   belongs_to :user
-  belongs_to :work_unit, class_name: 'Work::Unit'
+  belongs_to :work_unit, class_name: Work::Unit
 
   before_validation :check_inclusion, :check_for_low_level_exceptions
-  before_save :update_duration
+  before_save :set_duration
 
   validate :period, presence: true
   validate :work_unit_id, presence: true
@@ -45,7 +45,7 @@ class Work::TimeEntry < ActiveRecord::Base
     end if exception
   end
 
-  def update_duration
+  def set_duration
     self.duration = calculate_minutes
   end
 
