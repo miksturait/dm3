@@ -26,10 +26,11 @@ describe Work::TimeEntriesImportFromText do
   describe "work unit id as text" do
     subject(:sourcyx_manage_time_entry) { time_entries.first }
     let(:sourcyx_manage_work_unit) { sourcyx_active_phase.units.where(wuid: 'manage').first }
+    let(:time_entry_start_at) { Time.parse("2013-11-18 08:30") }
+    let(:time_entry_end_at) { Time.parse("2013-11-18 09:45") }
     it { expect(sourcyx_manage_time_entry).
         to eq({
-                  start_at: '2013-11-18 08:30',
-                  end_at: '2013-11-18 09:45',
+                  period: time_entry_start_at..time_entry_end_at,
                   work_unit: sourcyx_manage_work_unit,
                   comment: nil
               }) }
@@ -38,10 +39,11 @@ describe Work::TimeEntriesImportFromText do
   describe "work unit id as number" do
     subject(:sourcyx_spd_117_time_entry) { time_entries[4] }
     let(:sourcyx_spd_117_work_unit) { sourcyx_active_phase.units.where(wuid: 'spd-117').first }
+    let(:time_entry_start_at) { Time.parse("2013-09-02 10:45") }
+    let(:time_entry_end_at) { Time.parse("2013-09-02 11:00") }
     it { expect(sourcyx_spd_117_time_entry).
         to eq({
-                  start_at: '2013-09-02 10:45',
-                  end_at: '2013-09-02 11:00',
+                  period: time_entry_start_at..time_entry_end_at,
                   work_unit: sourcyx_spd_117_work_unit,
                   comment: 'writing specs'
               }) }

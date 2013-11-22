@@ -9,8 +9,7 @@ class Work::TimeEntriesImportFromText
   class SingleLine < Struct.new(:text_line)
     def attrs
       {
-          start_at: start_at,
-          end_at: end_at,
+          period: period,
           work_unit: work_unit,
           comment: comment
       }
@@ -22,12 +21,18 @@ class Work::TimeEntriesImportFromText
       @match ||= time_entry_line_regex.match(text_line)
     end
 
+    def period
+      start_at..end_at
+    end
+
     def start_at
-      [match[:date], match[:start_at]].join(' ')
+      Time.parse(
+          [match[:date], match[:start_at]].join(' '))
     end
 
     def end_at
-      [match[:date], match[:end_at]].join(' ')
+      Time.parse(
+          [match[:date], match[:end_at]].join(' '))
     end
 
     def comment

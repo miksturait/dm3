@@ -93,8 +93,6 @@ CREATE TABLE time_entries (
     id integer NOT NULL,
     user_id integer,
     work_unit_id integer,
-    start_at timestamp without time zone,
-    end_at timestamp without time zone,
     duration integer,
     comment text,
     period tstzrange
@@ -330,3 +328,5 @@ INSERT INTO schema_migrations (version) VALUES ('20131118165709');
 INSERT INTO schema_migrations (version) VALUES ('20131120151131');
 
 INSERT INTO schema_migrations (version) VALUES ('20131121173634');
+
+INSERT INTO schema_migrations (version) VALUES ('20131122123725');

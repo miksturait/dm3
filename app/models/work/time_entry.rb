@@ -7,6 +7,14 @@ class Work::TimeEntry < ActiveRecord::Base
 
   validate :period, presence: true
 
+  def start_at
+    period.begin
+  end
+
+  def end_at
+    period.end
+  end
+
   def inclusive?
     period && self.class.where(user_id: user_id).where(["period && tstzrange(?,?)", period.begin.to_s, period.end.to_s]).exists?
   end

@@ -43,8 +43,8 @@ describe Work::TimeImport do
 
       describe "single time entry" do
         subject(:hrm_time_entry) { tom.time_entries.where(comment: '- coworkers communication').first }
-        it { expect(hrm_time_entry.start_at).to eq(DateTime.parse("2013-11-13	16:00")) }
-        it { expect(hrm_time_entry.end_at).to eq(DateTime.parse("2013-11-13	17:00")) }
+        it { expect(hrm_time_entry.start_at).to eq(Time.parse("2013-11-13	16:00")) }
+        it { expect(hrm_time_entry.end_at).to eq(Time.parse("2013-11-13	17:00")) }
         it { expect(hrm_time_entry.duration).to eq(60) }
       end
     end
@@ -64,8 +64,8 @@ describe Work::TimeImport do
 
       describe "single time entry" do
         subject(:hrm_time_entry) { simon.time_entries.where(comment: '- topics / blocks').first }
-        it { expect(hrm_time_entry.start_at).to eq(DateTime.parse("2013-11-05	15:00")) }
-        it { expect(hrm_time_entry.end_at).to eq(DateTime.parse("2013-11-05	16:30")) }
+        it { expect(hrm_time_entry.start_at).to eq(Time.parse("2013-11-05	15:00")) }
+        it { expect(hrm_time_entry.end_at).to eq(Time.parse("2013-11-05	16:30")) }
         it { expect(hrm_time_entry.duration).to eq(90) }
       end
     end
