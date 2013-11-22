@@ -11,7 +11,8 @@ class Work::TimeEntriesImportFromText
       {
           period: period,
           work_unit: work_unit,
-          comment: comment
+          comment: comment,
+          exception: exception
       }
     end
 
@@ -39,7 +40,7 @@ class Work::TimeEntriesImportFromText
       match[:comment].strip if match[:comment]
     end
 
-    delegate :work_unit, to: :context
+    delegate :work_unit, :exception, to: :context
 
     def context
       Work::TimeEntryContext.new(match[:context])

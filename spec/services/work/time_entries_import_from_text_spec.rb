@@ -32,7 +32,8 @@ describe Work::TimeEntriesImportFromText do
         to eq({
                   period: time_entry_start_at..time_entry_end_at,
                   work_unit: sourcyx_manage_work_unit,
-                  comment: nil
+                  comment: nil,
+                  exception: nil
               }) }
   end
 
@@ -45,7 +46,8 @@ describe Work::TimeEntriesImportFromText do
         to eq({
                   period: time_entry_start_at..time_entry_end_at,
                   work_unit: sourcyx_spd_117_work_unit,
-                  comment: 'writing specs'
+                  comment: 'writing specs',
+                  exception: nil
               }) }
   end
 

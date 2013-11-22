@@ -1,7 +1,19 @@
 class Work::TimeEntryContext < Struct.new(:context_code)
+
   def work_unit
-    detect_unit || phase
+    begin
+      detect_unit || phase
+    rescue ActiveRecord::RecordNotFound => e
+      @exception = {work_unit_id: [e]}
+      return(nil)
+    end
   end
+
+  def exception
+    @exception ? @exception : work_unit; @exception
+  end
+
+  private
 
   def phase
     @phase ||= project.active_phase
@@ -14,8 +26,6 @@ class Work::TimeEntryContext < Struct.new(:context_code)
       raise ActiveRecord::RecordNotFound, "No Project defined with id: #{project_wuid}"
     end
   end
-
-  private
 
   delegate :units, to: :phase
 

@@ -6,9 +6,13 @@ describe Work::TimeEntryContext do
   # * within phase find or create work unit - ()if defined)
 
   context "can't find a project - will raise an exception" do
-    let(:work_unit) { Work::TimeEntryContext.new('hrm').work_unit }
+    let(:time_entry_context) { Work::TimeEntryContext.new('hrm') }
 
-    it { expect { work_unit }.to raise_error(ActiveRecord::RecordNotFound) }
+    it { expect(time_entry_context.work_unit).to be_nil }
+
+    let(:exception) { time_entry_context.exception[:work_unit_id].first }
+    it { expect(exception).to be_kind_of(ActiveRecord::RecordNotFound) }
+    it { expect(exception.message).to eq('No Project defined with id: hrm') }
   end
 
   context "within project" do

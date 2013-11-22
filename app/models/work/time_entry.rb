@@ -1,11 +1,14 @@
 class Work::TimeEntry < ActiveRecord::Base
+  attr_accessor :exception
+
   belongs_to :user
   belongs_to :work_unit, class_name: 'Work::Unit'
 
-  before_validation :check_inclusion
+  before_validation :check_inclusion, :check_for_low_level_exceptions
   before_save :update_duration
 
   validate :period, presence: true
+  validate :work_unit_id, presence: true
 
   scope :skip_self, ->(time_entry) do
     where(["#{self.table_name}.id != ?", time_entry.id]) unless time_entry.new_record?
@@ -32,6 +35,14 @@ class Work::TimeEntry < ActiveRecord::Base
 
   def check_inclusion
     errors[:period] << "overlaps already created record" if inclusive?
+  end
+
+  def check_for_low_level_exceptions
+    exception.each do |attribute, low_level_exceptions|
+      low_level_exceptions.each do |low_level_exception|
+        errors[attribute] << low_level_exception.message
+      end
+    end if exception
   end
 
   def update_duration

@@ -105,10 +105,26 @@ describe Work::TimeImport do
       it { expect(time_entry_with_error.comment).to eq('working merit money pay') }
       it { expect(error_messages_for_period).to eq(["overlaps already created record"]) }
     end
-    context "when project not defined", :focus do
+    context "when project not defined" do
+      let(:time_entries_as_text) do
+        %q{
+2013-11-11	09:00	09:45	process_and_tools
+2013-11-05	15:00	16:30	hrm - topics / blocks
+2013-09-02	10:45	11:00	thalamus writing specs
+2013-11-11	10:30	11:00	motrono working merit money pay
+  }
+      end
+      let(:time_entries) { Work::TimeImport.new(tom, time_entries_as_text) }
+      let!(:import) { time_entries.import! }
 
-      pending "it should not create even one time entry"
-      pending "proper error message should be attached to time entry"
+      it { expect(Work::TimeEntry.count).to eq(0) }
+      it { expect(time_entries).to have(2).error_messages }
+
+      let(:time_entry_with_error) { time_entries.errors.first }
+      let(:error_messages) { time_entry_with_error.errors.messages }
+      let(:error_messages_for_work_unit) { error_messages[:work_unit_id]}
+      it { expect(time_entry_with_error.comment).to eq('writing specs') }
+      it { expect(error_messages_for_work_unit).to eq(["No Project defined with id: thalamus"]) }
     end
   end
 end
