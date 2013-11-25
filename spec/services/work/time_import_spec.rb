@@ -61,7 +61,7 @@ describe Work::TimeImport do
 
       describe "single time entry" do
         subject(:hrm_time_entry) { simon.time_entries.where(comment: '- topics / blocks').first }
-        its(:start_at) { should  eq(Time.parse("2013-11-05	15:00")) }
+        its(:start_at) { should eq(Time.parse("2013-11-05	15:00")) }
         its(:end_at) { should eq(Time.parse("2013-11-05	16:30")) }
         its(:duration) { should eq(90) }
       end

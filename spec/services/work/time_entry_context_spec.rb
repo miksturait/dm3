@@ -37,7 +37,7 @@ describe Work::TimeEntryContext do
       context "Time Entry Context have work unit defined" do
         let(:time_entry_context) { Work::TimeEntryContext.new('ccc-manage') }
         context "work of unit exists" do
-          let!(:ccc_manage_unit) { current_phase.children.create(wuid: 'manage') }
+          let!(:ccc_manage_unit) { current_phase.create_children(wuid: 'manage') }
 
           it { expect(work_unit).to eq(ccc_manage_unit) }
           it { expect { work_unit }.to_not change { Work::Unit.count } }
