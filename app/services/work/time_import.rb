@@ -17,16 +17,15 @@ class Work::TimeImport < Struct.new(:user, :time_entries_data)
   end
 
   def validate
-    @validate ||= collect_errors_from_time_entries
+    @validate ||= collect_time_entries_errors
   end
 
-  def collect_errors_from_time_entries
-    time_entries.each do |te|
-      unless te.errors.empty?
-        errors << te
-      end
-    end
-    errors
+  def collect_time_entries_errors
+    errors.push(*invalid_time_entries)
+  end
+
+  def invalid_time_entries
+    time_entries.keep_if { |time_entry| time_entry.errors.present? }
   end
 
   def clear_errors

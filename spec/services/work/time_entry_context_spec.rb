@@ -1,14 +1,17 @@
 require 'spec_helper'
 
 describe Work::TimeEntryContext do
-  context "can't find a project - will raise an exception" do
-    let(:time_entry_context) { Work::TimeEntryContext.new('hrm') }
+  context "can't find a project" do
+    subject(:time_entry_context) { Work::TimeEntryContext.new('hrm') }
 
-    it { expect(time_entry_context.work_unit).to be_nil }
+    its(:work_unit) { should be_nil }
 
-    subject(:exception) { time_entry_context.exception[:work_unit_id].first }
-    it { should be_kind_of(ActiveRecord::RecordNotFound) }
-    its(:message) { should eq('No Project defined with id: hrm') }
+    describe 'exception' do
+      subject { time_entry_context.exception[:work_unit_id].first }
+
+      it { should be_kind_of(ActiveRecord::RecordNotFound) }
+      its(:message) { should eq('No Project defined with id: hrm') }
+    end
   end
 
   context "when project exists" do

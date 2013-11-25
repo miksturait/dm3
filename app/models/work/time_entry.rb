@@ -10,26 +10,22 @@ class Work::TimeEntry < ActiveRecord::Base
   validate :period, presence: true
   validate :work_unit_id, presence: true
 
-  scope :skip_self, ->(time_entry) do
+  scope :without_time_entry, ->(time_entry) do
     where(["#{self.table_name}.id != ?", time_entry.id]) unless time_entry.new_record?
   end
   scope :overlapping_with, ->(range) { where(["period && tstzrange(?,?)", range.begin.to_s, range.end.to_s]) }
 
-  def start_at
-    period.begin if period
-  end
-
-  def end_at
-    period.end if period
-  end
-
   def inclusive?
     period &&
         self.class.
-            skip_self(self).
+            without_time_entry(self).
             where(user_id: user_id).
             overlapping_with(period).exists?
   end
+
+  delegate :begin, :end,
+           to: :period,
+           prefix: true, allow_nil: true
 
   private
 
@@ -38,11 +34,15 @@ class Work::TimeEntry < ActiveRecord::Base
   end
 
   def check_for_low_level_exceptions
+    copy_exception_errors if exception
+  end
+
+  def copy_exception_errors
     exception.each do |attribute, low_level_exceptions|
       low_level_exceptions.each do |low_level_exception|
         errors[attribute] << low_level_exception.message
       end
-    end if exception
+    end
   end
 
   def set_duration
@@ -52,7 +52,7 @@ class Work::TimeEntry < ActiveRecord::Base
   delegate :calculate_minutes, to: :time_diff
 
   def time_diff
-    TimeDiff.new(start_at, end_at)
+    TimeDiff.new(period_begin, period_end)
   end
 
   class TimeDiff < Struct.new(:start_at, :end_at)

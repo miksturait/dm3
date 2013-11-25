@@ -41,8 +41,8 @@ describe Work::TimeImport do
 
       describe "single time entry" do
         subject(:hrm_time_entry) { tom.time_entries.where(comment: '- coworkers communication').first }
-        its(:start_at) { should eq(Time.parse("2013-11-13	16:00")) }
-        its(:end_at) { should eq(Time.parse("2013-11-13	17:00")) }
+        its(:period_begin) { should eq(Time.parse("2013-11-13	16:00")) }
+        its(:period_end) { should eq(Time.parse("2013-11-13	17:00")) }
         its(:duration) { should eq(60) }
       end
     end
@@ -61,8 +61,8 @@ describe Work::TimeImport do
 
       describe "single time entry" do
         subject(:hrm_time_entry) { simon.time_entries.where(comment: '- topics / blocks').first }
-        its(:start_at) { should eq(Time.parse("2013-11-05	15:00")) }
-        its(:end_at) { should eq(Time.parse("2013-11-05	16:30")) }
+        its(:period_begin) { should eq(Time.parse("2013-11-05	15:00")) }
+        its(:period_end) { should eq(Time.parse("2013-11-05	16:30")) }
         its(:duration) { should eq(90) }
       end
     end
@@ -112,14 +112,15 @@ describe Work::TimeImport do
   }
       end
       let(:time_entries) { Work::TimeImport.new(tom, time_entries_as_text) }
-      let!(:import) { time_entries.import! }
+      let(:time_entry_with_error) { time_entries.errors.first }
+      let(:error_messages) { time_entry_with_error.errors.messages }
+      let(:error_messages_for_work_unit) { error_messages[:work_unit_id] }
+
+      before { time_entries.import! }
 
       it { expect(Work::TimeEntry.count).to eq(0) }
       it { expect(time_entries).to have(2).error_messages }
 
-      let(:time_entry_with_error) { time_entries.errors.first }
-      let(:error_messages) { time_entry_with_error.errors.messages }
-      let(:error_messages_for_work_unit) { error_messages[:work_unit_id] }
       it { expect(time_entry_with_error.comment).to eq('writing specs') }
       it { expect(error_messages_for_work_unit).to eq(["No Project defined with id: thalamus"]) }
     end
