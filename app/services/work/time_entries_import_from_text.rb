@@ -2,11 +2,7 @@ class Work::TimeEntriesImportFromText < Struct.new(:raw_text)
 
   def attrs
     text.split("\n").collect do |text_line|
-      if (line = SingleLine.new(text_line)).valid?
-        line.attrs
-      else
-        line.unprocessable_attrs
-      end
+      SingleLine.new(text_line).attrs
     end
   end
 
@@ -18,6 +14,14 @@ class Work::TimeEntriesImportFromText < Struct.new(:raw_text)
 
   class SingleLine < Struct.new(:text_line)
     def attrs
+      match ?
+          fetch_attrs :
+          unprocessable_line_attrs
+    end
+
+    private
+
+    def fetch_attrs
       {
           period: period,
           work_unit: work_unit,
@@ -26,7 +30,7 @@ class Work::TimeEntriesImportFromText < Struct.new(:raw_text)
       }
     end
 
-    def unprocessable_attrs
+    def unprocessable_line_attrs
       {
           exception: {
               base: [%Q{line: "#{text_line}" have wrong format}]
@@ -34,16 +38,9 @@ class Work::TimeEntriesImportFromText < Struct.new(:raw_text)
       }
     end
 
-    def valid?
-      match
-    end
-
-    private
-
     def match
       @match ||= time_entry_line_regex.match(text_line)
     end
-
 
     def period
       start_at..end_at
