@@ -1,6 +1,5 @@
 language: ruby
 bundler_args: --without development --deployment
-cache: bundler
 rvm:
 - 2.0.0
 before_install:
