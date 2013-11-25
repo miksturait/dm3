@@ -44,6 +44,6 @@ class Work::TimeImport < Struct.new(:user, :time_entries_data)
   end
 
   def time_entries_attrs
-    Work::TimeEntriesImportFromText.parse(time_entries_data)
+    Work::TimeEntriesImportFromText.new(time_entries_data).attrs
   end
 end
