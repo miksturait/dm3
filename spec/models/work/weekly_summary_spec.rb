@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe Work::WeeklySummary do
-  pending 'prepare postgresql view'
+  pending 'V1 :: prepare postgresql view'
 
   # belongs_to :user
   # belongs_to :work_unit
-  pending 'relation with other objects'
+  pending 'V1 :: relation with other objects'
 end

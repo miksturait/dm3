@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 describe Work::TimeEntryContext do
-  # * it have to always find a project
-  # * it have to find or create current phase
-  # * within phase find or create work unit - ()if defined)
-
   context "can't find a project - will raise an exception" do
     let(:time_entry_context) { Work::TimeEntryContext.new('hrm') }
 
@@ -15,7 +11,7 @@ describe Work::TimeEntryContext do
     its(:message) { should eq('No Project defined with id: hrm') }
   end
 
-  context "within project" do
+  context "when project exists" do
     let!(:ccc) { create(:project, wuid: 'ccc', name: 'Credit Card Comparison') }
     let(:time_entry_context) { Work::TimeEntryContext.new('ccc') }
     let(:work_unit) { time_entry_context.work_unit }
@@ -26,7 +22,7 @@ describe Work::TimeEntryContext do
       it { expect { work_unit }.to change { Phase.count }.from(0).to(1) }
     end
 
-    context "within current phase" do
+    context "within existing phase" do
       let!(:current_phase) { ccc.active_phase }
       it { expect { work_unit }.to_not change { Phase.count } }
 
@@ -49,7 +45,7 @@ describe Work::TimeEntryContext do
         end
       end
 
-      pending "fetching work unit structure from youtrack"
+      pending "V0 :: fetching work unit structure from youtrack"
     end
   end
 end

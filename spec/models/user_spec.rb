@@ -3,7 +3,7 @@ require 'spec_helper'
 describe User do
 
   # https://github.com/pewniak747/deep_fetch
-  pending 'simplify create with omniauth method'
+  pending 'V2 :: simplify create with omniauth method'
 
-  pending 'rething unified authetication in selleo'
+  pending 'V2 :: rethink unified authentication in company'
 end

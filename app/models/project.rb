@@ -1,5 +1,6 @@
 class Project < Work::Unit
   alias_method :phases, :children
+  alias_method :customer, :parent
 
   validates :wuid,
             presence: true,

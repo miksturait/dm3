@@ -20,11 +20,6 @@ describe Work::TimeEntry do
     end
   end
 
-
   #   EFFORT_TYPE_REGEX =  /(regular|overtime|weekend|on-site)/i
-  pending "time entry types"
-
-  # * belongs to Work::Uni
-  # * belongs to User
-  pending "relation with other objects"
+  pending "V3 :: time entry types"
 end
