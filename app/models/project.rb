@@ -5,7 +5,7 @@ class Project < Work::Unit
   validates :wuid,
             presence: true,
             format: {
-                with: /\A[a-z\_\.]+\z/,
+                with: /\A[a-z\_\.0-9]+\z/,
                 message: "only small letters and underscores allowed",
                 allow_nil: true
             }

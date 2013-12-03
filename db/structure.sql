@@ -173,7 +173,8 @@ CREATE TABLE work_units (
     ancestry character varying(255),
     type character varying(255),
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    period daterange
 );
 
 
@@ -257,6 +258,14 @@ ALTER TABLE ONLY users
 
 
 --
+-- Name: work_units_ancestry_period_excl; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY work_units
+    ADD CONSTRAINT work_units_ancestry_period_excl EXCLUDE USING gist (ancestry WITH =, period WITH &&);
+
+
+--
 -- Name: work_units_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -330,3 +339,5 @@ INSERT INTO schema_migrations (version) VALUES ('20131120151131');
 INSERT INTO schema_migrations (version) VALUES ('20131121173634');
 
 INSERT INTO schema_migrations (version) VALUES ('20131122123725');
+
+INSERT INTO schema_migrations (version) VALUES ('20131203123256');

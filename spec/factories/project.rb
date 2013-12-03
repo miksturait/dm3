@@ -1,5 +1,9 @@
 FactoryGirl.define do
-  factory :project do
+  sequence :wuid do |n|
+    "project_#{n}"
+  end
 
+  factory :project do
+    wuid { generate(:wuid) }
   end
 end
