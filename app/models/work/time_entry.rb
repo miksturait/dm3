@@ -13,7 +13,7 @@ class Work::TimeEntry < ActiveRecord::Base
   scope :without_time_entry, ->(time_entry) do
     where(["#{self.table_name}.id != ?", time_entry.id]) unless time_entry.new_record?
   end
-  scope :overlapping_with, ->(range) { where(["period && tstzrange(?,?)", range.begin.to_s, range.end.to_s]) }
+  scope :overlapping_with, ->(range) { where(["period && tstzrange(?,?, '()')", range.begin.to_s, range.end.to_s]) }
 
   def inclusive?
     period &&

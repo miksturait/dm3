@@ -13,7 +13,9 @@ class Phase < Work::Unit
   scope :without_object, ->(object) do
     where(["#{self.table_name}.id != ?", object.id]) unless object.new_record?
   end
-  scope :overlapping_with, ->(range) { where(["period && daterange(?,?)", range.begin.to_s, range.end.to_s]) }
+
+  scope :overlapping_with, ->(range) { where(["period && daterange(?,?, '[]')", range.begin.to_s, range.end.to_s]) }
+  scope :active, -> { where(["period @> date(?) OR period IS NULL", Date.today]) }
 
   def inclusive?
     period &&

@@ -11,10 +11,14 @@ class Project < Work::Unit
             }
 
   def active_phase
-    children.last || create_children
+    detect_active_phase || create_children
   end
 
   private
+
+  def detect_active_phase
+    children_class.where(ancestry: child_ancestry).active.last
+  end
 
   def children_class
     Phase

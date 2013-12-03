@@ -13,7 +13,7 @@ describe Phase do
                                parent: project) }
     let(:bad_phase) { build(:phase, period: Date.today+1.days..Date.today+3.days,
                             parent: project) }
-    let(:good_phase) { build(:phase, period: Date.today-5.days..Date.today-2.days,
+    let(:good_phase) { build(:phase, period: Date.today-5.days..Date.today-3.days,
                              parent: project) }
 
     describe "finding exclusion" do
