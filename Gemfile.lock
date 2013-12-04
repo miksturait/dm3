@@ -1,5 +1,5 @@
 GIT
-  remote: git@github.com:eisnerd/youtrack-rest-ruby-library.git
+  remote: https://github.com/eisnerd/youtrack-rest-ruby-library.git
   revision: 0770a4ec0a9b53abf0cdc226b5417cf4e26cf605
   specs:
     youtrack_api (0.0.4)
