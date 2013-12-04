@@ -1,12 +1,12 @@
 language: ruby
+services: postgresql
 bundler_args: --without development --deployment
 rvm:
 - 2.0.0
 before_install:
-- postgres --version
 - 'echo ''gem: --no-ri --no-rdoc'' > ~/.gemrc'
-before_script:
 - export RAILS_ENV=test
+before_script:
 - cp -f config/travis/database.yml config/database.yml
 - cp -f config/travis/application.yml config/application.yml
 - bundle exec rake db:create db:migrate
