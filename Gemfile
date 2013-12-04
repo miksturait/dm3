@@ -20,6 +20,8 @@ gem 'simple_form', '>= 3.0.0.rc'
 
 gem 'ancestry'
 gem 'time_diff'
+gem 'youtrack_api', git: 'git@github.com:eisnerd/youtrack-rest-ruby-library.git'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller', platforms: [:mri_19, :mri_20, :rbx]
@@ -43,4 +45,6 @@ group :test do
   gem 'email_spec'
   gem 'codeclimate-test-reporter', require: nil
   gem 'shoulda-matchers'
+  gem 'vcr'
+  gem 'webmock'
 end

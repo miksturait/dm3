@@ -4,11 +4,6 @@ describe Project do
   # has_many :invoices // TODO: this will not be part of that app
   pending 'V2 :: relation with other objects'
 
-  pending 'active phase, require some further improvements'
-  # first look if there is any active phase -
-  #   * phase should have period (that should be exclusive within project)
-  # next it find the latest phase that in addition should have empty period
-
   describe "#active_phase" do
     let(:project) { create(:project) }
     let(:phase) { project.active_phase }
