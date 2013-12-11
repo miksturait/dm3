@@ -1,4 +1,5 @@
-class Work::UnitStructureImport::YouTrackConnection < Struct.new(:url, :login, :passwd)
+# It require url, login, passwd as attributes
+class Work::UnitStructureImport::YouTrackConnection < OpenStruct
 
   def connection
     ensure_connection

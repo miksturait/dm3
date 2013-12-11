@@ -1,10 +1,8 @@
 require 'spec_helper'
 
 describe Work::UnitStructureImport::YouTrackIssue, :vcr do
-  let(:youtrack_url) { ENV['YOUTRACK_URL'] }
-  let(:youtrack_login) { ENV['YOUTRACK_LOGIN'] }
-  let(:youtrack_passwd) { ENV['YOUTRACK_PASSWD'] }
-  let(:youtrack) { Work::UnitStructureImport::YouTrackConnection.new(youtrack_url, youtrack_login, youtrack_passwd) }
+  let(:youtrack_config) { Work::UnitStructureImport::YouTrackConfig.new.attrs }
+  let(:youtrack) { Work::UnitStructureImport::YouTrackConnection.new(youtrack_config) }
 
   let(:sprint) { build_context("2-8 Dec '13", nil) }
   let(:root) { build_context("1242", "HRM ( recruitment / skills development & dessimination )") }
