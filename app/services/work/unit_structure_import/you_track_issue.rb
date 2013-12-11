@@ -36,7 +36,7 @@ class Work::UnitStructureImport::YouTrackIssue < Struct.new(:youtrack, :master_i
   class Info < Struct.new(:connection, :id)
 
     def work_unit_context
-      ::Work::UnitStructureImport::WorkUnitContext.new(id, summary)
+      ::Work::UnitStructureImport::WorkUnitContext.new(unit_uid, summary)
     end
 
     def sprint
@@ -54,6 +54,12 @@ class Work::UnitStructureImport::YouTrackIssue < Struct.new(:youtrack, :master_i
     end
 
     private
+
+    delegate :unit_uid, to: :work_time_entry_context_context
+
+    def work_time_entry_context_context
+     ::Work::ContextFromTextCode.new(id)
+    end
 
     def parent_id
       detect_parent_id

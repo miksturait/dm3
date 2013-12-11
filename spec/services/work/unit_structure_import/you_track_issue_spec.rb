@@ -7,9 +7,9 @@ describe Work::UnitStructureImport::YouTrackIssue, :vcr do
   let(:youtrack) { Work::UnitStructureImport::YouTrackConnection.new(youtrack_url, youtrack_login, youtrack_passwd) }
 
   let(:sprint) { build_context("2-8 Dec '13", nil) }
-  let(:root) { build_context("selleo-1242", "HRM ( recruitment / skills development & dessimination )") }
-  let(:children_one) { build_context("selleo-979", "knowledge pack I") }
-  let(:children_last) { build_context("selleo-980", "Troubleshooting, The Developer's #1 Skill") }
+  let(:root) { build_context("1242", "HRM ( recruitment / skills development & dessimination )") }
+  let(:children_one) { build_context("979", "knowledge pack I") }
+  let(:children_last) { build_context("980", "Troubleshooting, The Developer's #1 Skill") }
 
   subject(:issue) { described_class.new(youtrack, 'selleo-980') }
 
