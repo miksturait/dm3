@@ -6,12 +6,12 @@ describe Work::UnitStructureImport::YouTrackIssue, :vcr do
   let(:youtrack_passwd) { ENV['YOUTRACK_PASSWD'] }
   let(:youtrack) { Work::UnitStructureImport::YouTrackConnection.new(youtrack_url, youtrack_login, youtrack_passwd) }
 
-  subject(:issue) { described_class.new(youtrack, 'selleo-980') }
-
   let(:sprint) { build_context("2-8 Dec '13", nil) }
   let(:root) { build_context("selleo-1242", "HRM ( recruitment / skills development & dessimination )") }
   let(:children_one) { build_context("selleo-979", "knowledge pack I") }
   let(:children_last) { build_context("selleo-980", "Troubleshooting, The Developer's #1 Skill") }
+
+  subject(:issue) { described_class.new(youtrack, 'selleo-980') }
 
   its(:work_unit_contexts) { should eq([
                                            sprint,
@@ -21,6 +21,6 @@ describe Work::UnitStructureImport::YouTrackIssue, :vcr do
                                        ]) }
 
   def build_context(wuid, name)
-    Work::UnitStructureImport::YouTrackIssue::Info::WorkUnitContext.new(wuid, name)
+    Work::UnitStructureImport::WorkUnitContext.new(wuid, name)
   end
 end

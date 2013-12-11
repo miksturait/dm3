@@ -11,7 +11,7 @@ class Work::UnitStructureImport::YouTrackIssue < Struct.new(:youtrack, :master_i
   private
 
   def sprint
-    Info::WorkUnitContext.new master_issue.sprint, nil
+    ::Work::UnitStructureImport::WorkUnitContext.new master_issue.sprint, nil
   end
 
   def ancestors
@@ -36,10 +36,7 @@ class Work::UnitStructureImport::YouTrackIssue < Struct.new(:youtrack, :master_i
   class Info < Struct.new(:connection, :id)
 
     def work_unit_context
-      WorkUnitContext.new(id, summary)
-    end
-
-    class WorkUnitContext < Struct.new(:wuid, :name)
+      ::Work::UnitStructureImport::WorkUnitContext.new(id, summary)
     end
 
     def sprint
