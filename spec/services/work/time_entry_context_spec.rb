@@ -49,19 +49,25 @@ describe Work::TimeEntryContext do
       end
 
       context "youtrack is configured for the project", :focus do
-        context "work unit not defind for current phase" do
-          # on detecting unit it should use Work::UnitStructureImport::YouTrackIssue
-          # in order to detect to fetch work unit structure
-          xit "work unit structure is recreated from youtrack"
-        end
-
+        # 1) project configuration
+             # * config in database
+        # 2) work units
+        #    # * one is for work unit that is present in current phase
+        #    # * one is for wokr unit that is not defined
         context "work unit is already defined" do
           xit "it doesn't ask youtrack for more info"
         end
 
-        context "work unit is partially defined" do
-          xit "it reause what is already defined"
+        context "work unit is misssing, and ask YouTrackIssue" do
+          context "something wen't wrong" do
+            xit "create issue based on what is availble, and add notice"
+          end
+
+          context "response is returned" do
+            xit "it recreated work structure and log hours"
+          end
         end
+
       end
     end
   end
