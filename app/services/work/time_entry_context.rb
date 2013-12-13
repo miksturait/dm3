@@ -27,40 +27,62 @@ class Work::TimeEntryContext < Struct.new(:context_code)
     end
   end
 
-  delegate :units, to: :phase
+  delegate :descendants, to: :phase
 
   def detect_unit
-    units.where(wuid: unit_uid).first_or_create if unit_uid
+    if unit_uid
+      try_to_recreate_work_unit_structure_based_on_youtrack
+      descendants.where(wuid: unit_uid).first || phase.children.create(wuid: unit_uid)
+    end
+  end
+
+  def try_to_recreate_work_unit_structure_based_on_youtrack
+    begin
+      rwusboy.process
+    rescue => e
+      Rails.logger.error("\n\n== YOUTRACK API FAILURE \n#{rwusboy}\n#{e}\n\n")
+      # TODO we should notify erbit
+    end if project.is_connected_with_youtrack?
+  end
+
+  def rwusboy
+    @rwusboy ||=
+        RecreateWorkUnitStructureBasedOnYoutrack.new(project, context_code)
   end
 
   delegate :project_wuid, :unit_uid, :nofollow, to: :context
 
   def context
-    @context ||= Context.new(context_code)
+    @context ||= Work::ContextFromTextCode.new(context_code)
   end
 
-  class Context < Struct.new(:context_code)
+  class RecreateWorkUnitStructureBasedOnYoutrack < Struct.new(:project, :context_code)
+    delegate :process, to: :rbowuc
 
-    def project_wuid
-      match[:project]
+    def rbowuc
+      @rbowuc ||=
+          Work::UnitStructureImport::RecreateBasedOnWorkUnitContext.new(active_phase, work_unit_contexts)
     end
 
-    def unit_uid
-      match[:unit]
+    delegate :active_phase, to: :project
+    delegate :work_unit_contexts, to: :issue
+
+    def issue
+      @issue ||=
+          Work::UnitStructureImport::YouTrackIssue.new(youtrack, context_code)
     end
 
-    def nofollow
-      match[:nofollow]
+    def youtrack
+      @youtrack ||=
+          Work::UnitStructureImport::YouTrackConnection.new(youtrack_config.attrs)
     end
 
-    private
-
-    def match
-      context_regex.match(context_code)
+    def youtrack_config
+      Work::UnitStructureImport::YouTrackConfig.new(youtrack_config_code)
     end
 
-    def context_regex
-      /^(?<project>[^\-]+)(\-(?<unit>[^\n]+))?$/
+    def youtrack_config_code
+      project.opts["youtrack"]
     end
   end
 end

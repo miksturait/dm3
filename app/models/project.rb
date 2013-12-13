@@ -14,6 +14,10 @@ class Project < Work::Unit
     detect_active_phase || create_children
   end
 
+  def is_connected_with_youtrack?
+    opts && opts.has_key?("youtrack")
+  end
+
   private
 
   def detect_active_phase

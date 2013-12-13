@@ -37,6 +37,20 @@ CREATE EXTENSION IF NOT EXISTS btree_gist WITH SCHEMA public;
 COMMENT ON EXTENSION btree_gist IS 'support for indexing common datatypes in GiST';
 
 
+--
+-- Name: hstore; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
+
+
 SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
@@ -174,7 +188,8 @@ CREATE TABLE work_units (
     type character varying(255),
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    period daterange
+    period daterange,
+    opts hstore
 );
 
 
@@ -341,3 +356,5 @@ INSERT INTO schema_migrations (version) VALUES ('20131121173634');
 INSERT INTO schema_migrations (version) VALUES ('20131122123725');
 
 INSERT INTO schema_migrations (version) VALUES ('20131203123256');
+
+INSERT INTO schema_migrations (version) VALUES ('20131213194625');
