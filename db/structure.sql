@@ -257,14 +257,6 @@ ALTER TABLE ONLY time_entries
 
 
 --
--- Name: time_entries_user_id_period_excl; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY time_entries
-    ADD CONSTRAINT time_entries_user_id_period_excl EXCLUDE USING gist (user_id WITH =, period WITH &&);
-
-
---
 -- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
