@@ -22,6 +22,9 @@ gem 'ancestry'
 gem 'time_diff'
 gem 'youtrack_api', git: 'https://github.com/eisnerd/youtrack-rest-ruby-library.git'
 
+gem 'activeadmin', github: 'gregbell/active_admin'
+gem "activeadmin-sortable-tree", github: "nebirhos/activeadmin-sortable-tree"
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller', platforms: [:mri_19, :mri_20, :rbx]
@@ -36,10 +39,12 @@ group :development do
   gem 'rb-inotify', require: false
   gem 'mysql'
 end
+
 group :development, :test do
   gem 'factory_girl_rails'
   gem 'rspec-rails'
 end
+
 group :test do
   gem 'capybara'
   gem 'database_cleaner', '1.0.1'
