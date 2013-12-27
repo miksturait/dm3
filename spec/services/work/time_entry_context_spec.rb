@@ -71,6 +71,9 @@ describe Work::TimeEntryContext do
       end
 
       context "something wen't wrong - e.g. youtrack is unavaible" do
+        #let(:some_context) { Work::TimeEntryContext.new('selleo-612') }
+        #let(:selleo_612_work_unit) { time_entry_context.work_unit }
+
         xit "create issue based on what is availble, and add notice"
       end
 
