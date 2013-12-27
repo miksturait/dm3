@@ -1,5 +1,5 @@
 load 'dm2_import/base.rb'
-Benchmark.measure do
+benchmark = Benchmark.measure do
   begin
     Dm2::Support.clear
 
@@ -17,3 +17,5 @@ Benchmark.measure do
     puts e
   end
 end
+
+puts benchmark

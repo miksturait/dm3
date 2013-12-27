@@ -87,8 +87,12 @@ module Dm2
         end
       end
 
+      def company_selleo
+        @company_selleo ||= Company.create(name: 'Selleo')
+      end
+
       def create_customer_from_root(dm2_project)
-        Customer.create(
+        company_selleo.create_children(
             name: dm2_project.name
         )
       end
