@@ -62,9 +62,15 @@ class Work::CalculateWorkingHours < Struct.new(:period, :coworker, :hours_per_da
     end
 
     def work_days_off_periods
-      []
-      # TODO :-)
-      # Work::DaysOffPeriod.official_days_off_and_days_of_for_coworker(coworker).in_period(period).select(:period).all
+      work_days_off_period_query_chain.within_period(period).select(:period).all
+    end
+
+    def work_days_off_period_query_chain
+      if coworker
+        Work::DaysOffPeriod.official_days_off_and_days_of_for_coworker(coworker)
+      else
+        Work::DaysOffPeriod.official_days_off
+      end
     end
   end
 end
