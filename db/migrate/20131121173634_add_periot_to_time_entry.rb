@@ -6,7 +6,7 @@ class AddPeriotToTimeEntry < ActiveRecord::Migration
 #    execute(%q{
 #    CREATE EXTENSION btree_gist;
 #    ALTER TABLE time_entries
-#      ADD EXCLUDE USING GIST (user_id WITH =, period WITH &&);
+#      ADD EXCLUDE USING GIST (coworker_id WITH =, period WITH &&);
 #})
   end
 end

@@ -1,2 +1,0 @@
-class Work::WeeklyTarget
-end

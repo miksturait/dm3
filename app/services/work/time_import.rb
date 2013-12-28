@@ -1,4 +1,4 @@
-class Work::TimeImport < Struct.new(:user, :time_entries_data)
+class Work::TimeImport < Struct.new(:coworker, :time_entries_data)
   attr_accessor :errors
   attr_reader :time_entries
 
@@ -39,7 +39,7 @@ class Work::TimeImport < Struct.new(:user, :time_entries_data)
   end
 
   def create_time_entry(attrs)
-    user.time_entries.create(attrs)
+    coworker.time_entries.create(attrs)
   end
 
   def time_entries_attrs

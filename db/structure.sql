@@ -134,6 +134,36 @@ ALTER SEQUENCE admin_users_id_seq OWNED BY admin_users.id;
 
 
 --
+-- Name: coworkers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE coworkers (
+    id integer NOT NULL,
+    name character varying(255),
+    email character varying(255)
+);
+
+
+--
+-- Name: coworkers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE coworkers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: coworkers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE coworkers_id_seq OWNED BY coworkers.id;
+
+
+--
 -- Name: roles; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -181,7 +211,7 @@ CREATE TABLE schema_migrations (
 
 CREATE TABLE time_entries (
     id integer NOT NULL,
-    user_id integer,
+    coworker_id integer,
     work_unit_id integer,
     duration integer,
     comment text,
@@ -306,6 +336,13 @@ ALTER TABLE ONLY admin_users ALTER COLUMN id SET DEFAULT nextval('admin_users_id
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY coworkers ALTER COLUMN id SET DEFAULT nextval('coworkers_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regclass);
 
 
@@ -344,6 +381,14 @@ ALTER TABLE ONLY active_admin_comments
 
 ALTER TABLE ONLY admin_users
     ADD CONSTRAINT admin_users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: coworkers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY coworkers
+    ADD CONSTRAINT coworkers_pkey PRIMARY KEY (id);
 
 
 --
@@ -436,10 +481,10 @@ CREATE INDEX index_roles_on_name_and_resource_type_and_resource_id ON roles USIN
 
 
 --
--- Name: index_time_entries_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_time_entries_on_coworker_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_time_entries_on_user_id ON time_entries USING btree (user_id);
+CREATE INDEX index_time_entries_on_coworker_id ON time_entries USING btree (coworker_id);
 
 
 --
@@ -495,3 +540,7 @@ INSERT INTO schema_migrations (version) VALUES ('20131213194625');
 INSERT INTO schema_migrations (version) VALUES ('20131227174156');
 
 INSERT INTO schema_migrations (version) VALUES ('20131227174159');
+
+INSERT INTO schema_migrations (version) VALUES ('20131228105250');
+
+INSERT INTO schema_migrations (version) VALUES ('20131228105636');

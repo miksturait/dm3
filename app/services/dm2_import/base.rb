@@ -39,7 +39,7 @@ module Dm2
       def clear
         Dm2::TimeEntry.where(spent_on: nil).delete_all
         Dm2::TimeEntry.where("hours < 0").delete_all
-        ::User.delete_all
+        ::Coworker.delete_all
         ::Work::Unit.delete_all
         ::Work::TimeEntry.delete_all
       end
@@ -51,39 +51,39 @@ module Dm2
         child.time_entries.group(:user_id, :spent_on).sum(:hours).each do |key, workload|
           puts "*"
           dm2_user_id, date = *key
-          if (user = find_or_create_user(dm2_user_id))
-            period = calculate_period_base_on_date_and_workload(user, date, workload)
-            user.time_entries.create(work_unit: project.active_phase, period: period)
+          if (coworker = find_or_create_coworker(dm2_user_id))
+            period = calculate_period_base_on_date_and_workload(coworker, date, workload)
+            coworker.time_entries.create(work_unit: project.active_phase, period: period)
           end
         end
       end
 
-      def calculate_period_base_on_date_and_workload(user, date, workload)
+      def calculate_period_base_on_date_and_workload(coworker, date, workload)
         workload_in_minutes = (workload * 60.0).ceil
         range = date.to_datetime..date.to_datetime+23.hours+59.minutes+59.seconds
-        start_at = detect_start_at_for_user_and_range(user, range)
+        start_at = detect_start_at_for_coworker_and_range(coworker, range)
         start_at..start_at+workload_in_minutes.minutes
       end
 
-      def detect_start_at_for_user_and_range(user, range)
-        if (last_time_entry = user.time_entries.overlapping_with(range).last)
+      def detect_start_at_for_coworker_and_range(coworker, range)
+        if (last_time_entry = coworker.time_entries.overlapping_with(range).last)
           last_time_entry.period.end
         else
           range.begin
         end
       end
 
-      def dm2_dm3_user_mapping
-        @dm2_dm3_user_mapping ||= {}
+      def dm2_dm3_coworker_mapping
+        @dm2_dm3_coworker_mapping ||= {}
       end
 
-      def find_or_create_user(dm2_user_id)
-        dm2_dm3_user_mapping[dm2_user_id] || build_user_based_on_dm2(dm2_user_id)
+      def find_or_create_coworker(dm2_user_id)
+        dm2_dm3_coworker_mapping[dm2_user_id] || build_coworker_based_on_dm2(dm2_user_id)
       end
 
-      def build_user_based_on_dm2(dm2_user_id)
+      def build_coworker_based_on_dm2(dm2_user_id)
         if (dm2_user = Dm2::User.where(id: dm2_user_id).first)
-          ::User.create(email: dm2_user.email, name: dm2_user.name).tap { |user| dm2_dm3_user_mapping[dm2_user_id] = user }
+          ::Coworker.create(email: dm2_user.email, name: dm2_user.name).tap { |coworker| dm2_dm3_coworker_mapping[dm2_user_id] = coworker }
         end
       end
 

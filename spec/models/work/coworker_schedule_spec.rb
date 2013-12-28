@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Work::WeeklyTarget do
+describe Work::CoworkerSchedule do
 
   # belongs_to :user
   # belongs_to :work_unit

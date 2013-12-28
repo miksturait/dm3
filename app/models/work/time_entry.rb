@@ -1,7 +1,7 @@
 class Work::TimeEntry < ActiveRecord::Base
   attr_accessor :exception
 
-  belongs_to :user
+  belongs_to :coworker
   belongs_to :work_unit, class_name: Work::Unit
 
   before_validation :check_inclusion, :check_for_low_level_exceptions
@@ -19,7 +19,7 @@ class Work::TimeEntry < ActiveRecord::Base
     period &&
         self.class.
             without_time_entry(self).
-            where(user_id: user_id).
+            where(coworker_id: coworker_id).
             overlapping_with(period).exists?
   end
 

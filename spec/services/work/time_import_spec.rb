@@ -23,8 +23,8 @@ describe Work::TimeImport do
     end
   end
 
-  let(:tom) { create(:user, name: 'Tom Hawk') }
-  let(:simon) { create(:user, name: 'Simon Walker') }
+  let(:tom) { create(:coworker, name: 'Tom Hawk') }
+  let(:simon) { create(:coworker, name: 'Simon Walker') }
   let(:tom_time_entries) { Work::TimeImport.new(tom, tom_time_entries_as_text) }
   let(:simon_time_entries) { Work::TimeImport.new(simon, simon_time_entries_as_text) }
 
