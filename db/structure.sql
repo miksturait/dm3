@@ -134,6 +134,39 @@ ALTER SEQUENCE admin_users_id_seq OWNED BY admin_users.id;
 
 
 --
+-- Name: coworker_targets; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE coworker_targets (
+    id integer NOT NULL,
+    coworker_id integer,
+    work_unit_id integer,
+    hours_per_day integer DEFAULT 8,
+    period daterange,
+    cache_of_total_hours integer
+);
+
+
+--
+-- Name: coworker_targets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE coworker_targets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: coworker_targets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE coworker_targets_id_seq OWNED BY coworker_targets.id;
+
+
+--
 -- Name: coworkers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -161,6 +194,37 @@ CREATE SEQUENCE coworkers_id_seq
 --
 
 ALTER SEQUENCE coworkers_id_seq OWNED BY coworkers.id;
+
+
+--
+-- Name: days_off_periods; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE days_off_periods (
+    id integer NOT NULL,
+    coworker_id integer,
+    period daterange,
+    comment character varying(255)
+);
+
+
+--
+-- Name: days_off_periods_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE days_off_periods_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: days_off_periods_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE days_off_periods_id_seq OWNED BY days_off_periods.id;
 
 
 --
@@ -336,7 +400,21 @@ ALTER TABLE ONLY admin_users ALTER COLUMN id SET DEFAULT nextval('admin_users_id
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY coworker_targets ALTER COLUMN id SET DEFAULT nextval('coworker_targets_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY coworkers ALTER COLUMN id SET DEFAULT nextval('coworkers_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY days_off_periods ALTER COLUMN id SET DEFAULT nextval('days_off_periods_id_seq'::regclass);
 
 
 --
@@ -384,11 +462,27 @@ ALTER TABLE ONLY admin_users
 
 
 --
+-- Name: coworker_targets_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY coworker_targets
+    ADD CONSTRAINT coworker_targets_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: coworkers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY coworkers
     ADD CONSTRAINT coworkers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: days_off_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY days_off_periods
+    ADD CONSTRAINT days_off_periods_pkey PRIMARY KEY (id);
 
 
 --
@@ -544,3 +638,7 @@ INSERT INTO schema_migrations (version) VALUES ('20131227174159');
 INSERT INTO schema_migrations (version) VALUES ('20131228105250');
 
 INSERT INTO schema_migrations (version) VALUES ('20131228105636');
+
+INSERT INTO schema_migrations (version) VALUES ('20131228115135');
+
+INSERT INTO schema_migrations (version) VALUES ('20131228135340');
