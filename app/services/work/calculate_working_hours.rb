@@ -1,14 +1,18 @@
 class Work::CalculateWorkingHours < Struct.new(:period, :coworker, :hours_per_day)
-  def hours
-    business_days * working_hours_for_business_day
+
+  def working_hours
+    working_days.size * working_hours_for_working_day
   end
 
-  def business_days
-    @business_days ||=
-        count_business_days
+
+  def working_days
+    @working_days ||=
+        select_working_days
   end
 
-  def working_hours_for_business_day
+  private
+
+  def working_hours_for_working_day
     hours_per_day || Work::CalculateWorkingHours.default_working_hours
   end
 
@@ -16,11 +20,9 @@ class Work::CalculateWorkingHours < Struct.new(:period, :coworker, :hours_per_da
     8
   end
 
-  private
-
-  def count_business_days
-    period.count do |day|
-      days_off_info.business_day?(day)
+  def select_working_days
+    period.select do |day|
+      days_off_info.working_day?(day)
     end
   end
 
@@ -30,7 +32,7 @@ class Work::CalculateWorkingHours < Struct.new(:period, :coworker, :hours_per_da
   end
 
   class DaysOffInfo < Struct.new(:period, :coworker)
-    def business_day?(day)
+    def working_day?(day)
       !(is_a_weekend?(day) or
           is_a_day_off?(day))
     end
@@ -62,7 +64,7 @@ class Work::CalculateWorkingHours < Struct.new(:period, :coworker, :hours_per_da
     end
 
     def work_days_off_periods
-      work_days_off_period_query_chain.within_period(period).select(:period).all
+      work_days_off_period_query_chain.within_period(period).select(:period)
     end
 
     def work_days_off_period_query_chain
