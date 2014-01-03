@@ -20,6 +20,6 @@ class Work::EnsureEachDayForCoworkerTarget < Struct.new(:coworker_target)
   end
 
   def clear_unneeded_resources
-    daily_targets.delete_all
+    daily_targets.destroy_all
   end
 end
