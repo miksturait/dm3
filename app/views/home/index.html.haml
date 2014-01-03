@@ -1,2 +1,13 @@
 %h1 Home#index
 %p Find me in app/views/home/index.html.haml
+
+%input.rangepicker.start.hide
+%input#period.range{readonly: true}
+%input.rangepicker.end.hide
+
+
+- coworker = Coworker.new
+= semantic_form_for(coworker) do |f|
+  = f.inputs do
+    = f.input :name, :as => :string
+
