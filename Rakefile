@@ -4,3 +4,6 @@
 require File.expand_path('../config/application', __FILE__)
 
 Dm3::Application.load_tasks
+
+# Add services to Stats
+STATS_DIRECTORIES <<  %w(Services app/services)
