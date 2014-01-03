@@ -6,6 +6,7 @@ class Work::CoworkerTarget < ActiveRecord::Base
   before_validation :inherit_period_from_work_unit
   validates :period, presence: true
   before_save :cache_working_hours
+  after_save :create_working_targets
 
   delegate :working_hours, :working_days, to: :calculate_working_hours
 
@@ -15,6 +16,9 @@ class Work::CoworkerTarget < ActiveRecord::Base
     self.period = work_unit.try(:period) if period.blank?
   end
 
+  def create_working_targets
+    Work::EnsureEachDayForCoworkerTarget.new(self).process
+  end
 
   def cache_working_hours
     self.cache_of_total_hours = working_hours

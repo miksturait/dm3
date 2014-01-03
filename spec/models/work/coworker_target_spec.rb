@@ -13,6 +13,8 @@ describe Work::CoworkerTarget do
     its(:period) { should eq work_unit.period }
     its(:hours_per_day) { should eq(8)}
     its(:cache_of_total_hours) { should eq(80) }
+
+    it { should have(10).daily_targets }
   end
 
   context "custom period & number of hours per days" do
@@ -23,9 +25,4 @@ describe Work::CoworkerTarget do
 
     its(:cache_of_total_hours) { should eq(15) }
   end
-
-  pending 'V0 :: user schedule (split targets into days)'
-  # def cache_coworker_target
-  #   Work::CoworkerTargetCache.cache(self)
-  # end
 end
