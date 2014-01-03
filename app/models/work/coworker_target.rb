@@ -9,6 +9,7 @@ class Work::CoworkerTarget < ActiveRecord::Base
   after_save :create_daily_targets
 
   delegate :working_hours, :working_days, to: :calculate_working_hours
+  delegate :begin, :end, to: :period, prefix: true, allow_nil: true
 
   private
 
