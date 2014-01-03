@@ -28,21 +28,21 @@ describe Work::DaysOffPeriod do
 
   context "only official day off's" do
     subject(:day_off_periods) { described_class.within_period(period).
-        official_days_off.all }
+        official_days_off.load }
 
     it { should match_array([official_day_off_within]) }
   end
 
   context "days off relevent for tom" do
     subject(:day_off_periods) { described_class.within_period(period).
-        official_days_off_and_days_of_for_coworker(tom).all }
+        official_days_off_and_days_of_for_coworker(tom).load }
 
     it { should match_array([official_day_off_within, tom_day_off_within_begin]) }
   end
 
   context "days off relevent for simon" do
     subject(:day_off_periods) { described_class.within_period(period).
-        official_days_off_and_days_of_for_coworker(simon).all }
+        official_days_off_and_days_of_for_coworker(simon).load }
 
     it { should match_array([official_day_off_within, simon_day_off_within, simon_day_off_within_end]) }
   end
