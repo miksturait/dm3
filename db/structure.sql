@@ -197,6 +197,39 @@ ALTER SEQUENCE coworkers_id_seq OWNED BY coworkers.id;
 
 
 --
+-- Name: daily_coworker_targets; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE daily_coworker_targets (
+    id integer NOT NULL,
+    work_unit_id integer,
+    coworker_id integer,
+    coworker_target_id integer,
+    day date,
+    hours integer
+);
+
+
+--
+-- Name: daily_coworker_targets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE daily_coworker_targets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: daily_coworker_targets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE daily_coworker_targets_id_seq OWNED BY daily_coworker_targets.id;
+
+
+--
 -- Name: days_off_periods; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -414,6 +447,13 @@ ALTER TABLE ONLY coworkers ALTER COLUMN id SET DEFAULT nextval('coworkers_id_seq
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY daily_coworker_targets ALTER COLUMN id SET DEFAULT nextval('daily_coworker_targets_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY days_off_periods ALTER COLUMN id SET DEFAULT nextval('days_off_periods_id_seq'::regclass);
 
 
@@ -475,6 +515,14 @@ ALTER TABLE ONLY coworker_targets
 
 ALTER TABLE ONLY coworkers
     ADD CONSTRAINT coworkers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: daily_coworker_targets_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY daily_coworker_targets
+    ADD CONSTRAINT daily_coworker_targets_pkey PRIMARY KEY (id);
 
 
 --
@@ -642,3 +690,5 @@ INSERT INTO schema_migrations (version) VALUES ('20131228105636');
 INSERT INTO schema_migrations (version) VALUES ('20131228115135');
 
 INSERT INTO schema_migrations (version) VALUES ('20131228135340');
+
+INSERT INTO schema_migrations (version) VALUES ('20140103090005');

@@ -1,6 +1,7 @@
 class Work::CoworkerTarget < ActiveRecord::Base
   belongs_to :work_unit, class_name: Work::Unit
   belongs_to :coworker, class_name: Coworker
+  has_many :daily_targets, class_name: Work::DailyCoworkerTarget
 
   before_validation :inherit_period_from_work_unit
   validates :period, presence: true
