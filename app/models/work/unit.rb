@@ -1,6 +1,6 @@
 class Work::Unit < ActiveRecord::Base
   self.table_name = 'work_units'
-  has_ancestry
+  has_ancestry cache_depth: true
   has_many :time_entries, class_name: Work::TimeEntry
   has_many :coworker_tergets, class_name: Work::CoworkerTarget
 

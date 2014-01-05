@@ -392,7 +392,8 @@ CREATE TABLE work_units (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     period daterange,
-    opts hstore
+    opts hstore,
+    ancestry_depth integer DEFAULT 0
 );
 
 
@@ -692,3 +693,5 @@ INSERT INTO schema_migrations (version) VALUES ('20131228115135');
 INSERT INTO schema_migrations (version) VALUES ('20131228135340');
 
 INSERT INTO schema_migrations (version) VALUES ('20140103090005');
+
+INSERT INTO schema_migrations (version) VALUES ('20140103193026');

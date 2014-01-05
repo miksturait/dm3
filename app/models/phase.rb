@@ -2,7 +2,7 @@ class Phase < Work::Unit
   alias_method :project, :parent
   alias_method :units, :children
 
-  before_validation :check_inclusion
+  before_validation :check_inclusion, :set_default_name
   validates :wuid,
             inclusion: {
                 in: [],
@@ -29,5 +29,9 @@ class Phase < Work::Unit
 
   def check_inclusion
     errors[:period] << "overlaps already created record" if inclusive?
+  end
+
+  def set_default_name
+    self.name = Date.today.beginning_of_week.to_s(:short) if name.blank?
   end
 end
