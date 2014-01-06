@@ -40,7 +40,11 @@ class Work::TimeEntry < ActiveRecord::Base
   def copy_exception_errors
     exception.each do |attribute, low_level_exceptions|
       low_level_exceptions.each do |low_level_exception|
-        errors[attribute] << low_level_exception.message
+        errors[attribute] << if low_level_exception.respond_to?(:message)
+                               low_level_exception.message
+                             else
+                               low_level_exception
+                             end
       end
     end
   end

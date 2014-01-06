@@ -3,4 +3,8 @@ Dm3::Application.routes.draw do
   ActiveAdmin.routes(self)
   root to: "home#index"
   resources :coworkers
+
+  namespace :dm2 do
+    get "api/workload_import"
+  end
 end
