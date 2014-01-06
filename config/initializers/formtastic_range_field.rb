@@ -10,5 +10,8 @@ module Formtastic
         end
       end
     end
+
+    class HstoreInput < Formtastic::Inputs::StringInput
+    end
   end
 end

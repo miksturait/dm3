@@ -1,7 +1,8 @@
 ActiveAdmin.register Work::Unit, as: 'Work Structure' do
   config.batch_actions = false
-
+  permit_params :wuid, :name, :opts
   actions :all, except: [:destroy, :new]
+
 
   sortable tree: true,
            max_levels: 3,

@@ -5,7 +5,7 @@ describe Dm2::ApiController do
   describe "GET 'workload_import'" do
     context "failure" do
       let!(:call) {
-        get 'workload_import', {
+        post 'workload_import', {
             auth_token: '',
             coworker_email: 'some@email.com',
             time_entries_data: ''
@@ -25,7 +25,7 @@ describe Dm2::ApiController do
       let!(:work_unit) { create(:project, wuid: 'hrm') }
 
       let!(:call) {
-        get 'workload_import', import: {
+        post 'workload_import', import: {
             auth_token: '9552211f1ac89d0bb10863a71a92',
             coworker_email: 'simon@mikstura.it',
             time_entries_data: %q{
@@ -38,7 +38,7 @@ describe Dm2::ApiController do
 
       it { should eq({
                          "errors" => [],
-                         "time_entries" => ["75 minutes on   :  6 Jan < ", "60 minutes on   :  6 Jan < "],
+                         "time_entries" => ["  75 minutes on      :  6 Jan [- 360 feedback session]", "  60 minutes on      :  6 Jan [- coworkers communication]"],
                          "time_entries_data" => "\n2013-11-18\t08:30\t09:45\thrm - 360 feedback session\n2013-11-13\t16:00\t17:00\thrm - coworkers communication\n"}) }
     end
   end

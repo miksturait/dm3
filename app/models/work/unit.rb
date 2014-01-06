@@ -11,6 +11,10 @@ class Work::Unit < ActiveRecord::Base
                 allow_nil: true
             }
 
+  delegate :begin, :end,
+           to: :period,
+           prefix: true, allow_nil: true
+
 
   def time_entries
     Work::TimeEntry.where(work_unit_id: subtree_ids)

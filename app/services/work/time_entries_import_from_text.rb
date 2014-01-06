@@ -70,7 +70,7 @@ class Work::TimeEntriesImportFromText < Struct.new(:raw_text)
     end
 
     def time_entry_line_regex
-      /^(?<date>[^\s]{10})\s+(?<start_at>[^\s]{5})\s+(?<end_at>[^\s]{5})\s+(?<context>[^\s]+)(?<comment>[^(\n)]+)?$/
+      /^(?<date>[^\s]{10})\s+(?<start_at>[^\s]{5})\s+(?<end_at>[^\s]{5})\s+(?<context>[^\s]+)(?<comment>[^\n]+)?$/
     end
   end
 end
