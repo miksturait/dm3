@@ -14,7 +14,6 @@ gem 'haml-rails'
 gem 'omniauth'
 gem 'omniauth-google-oauth2'
 gem 'pg'
-gem 'puma'
 gem 'rolify'
 gem 'simple_form', '>= 3.0.0.rc'
 
@@ -26,6 +25,11 @@ gem "select2-rails"
 
 gem 'activeadmin', github: 'gregbell/active_admin'
 gem "activeadmin-sortable-tree", github: "nebirhos/activeadmin-sortable-tree"
+
+group :production do
+  gem 'passenger'
+  gem 'mysql'
+end
 
 group :development do
   gem 'better_errors'
@@ -45,6 +49,10 @@ end
 group :development, :test do
   gem 'factory_girl_rails'
   gem 'rspec-rails'
+  gem 'capistrano'
+  gem 'capistrano-rvm'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rails', '~> 1.1'
 end
 
 group :test do
