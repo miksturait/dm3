@@ -11,6 +11,8 @@ class Work::Unit < ActiveRecord::Base
                 allow_nil: true
             }
 
+  scope :skip_archived, -> { where("opts @> hstore('archived', 'false')") }
+
   delegate :begin, :end,
            to: :period,
            prefix: true, allow_nil: true

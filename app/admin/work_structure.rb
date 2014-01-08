@@ -13,7 +13,7 @@ ActiveAdmin.register Work::Unit, as: 'Work Structure' do
            protect_root: true,
            collapsible: true,
            start_collapsed: true,
-           roots_collection: proc { Company.first.children }
+           roots_collection: proc { Company.first.children.skip_archived }
 
   index :as => :sortable do
     label :name
