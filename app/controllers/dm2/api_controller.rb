@@ -1,4 +1,6 @@
 class Dm2::ApiController < ApplicationController
+  skip_before_action :verify_authenticity_token
+
   def workload_import
     render json: import_object.process,
            serializer: DM2Import::Serializer,
