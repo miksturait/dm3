@@ -25,6 +25,7 @@ gem "select2-rails"
 
 gem 'activeadmin', github: 'gregbell/active_admin'
 gem "activeadmin-sortable-tree", github: "nebirhos/activeadmin-sortable-tree"
+gem "airbrake"
 
 group :production do
   gem 'passenger'
