@@ -21,5 +21,13 @@ class DM2Import::Process
     end
     puts benchmark
   end
+
+  def self.close_all_periods
+    Phase.all.each do |phase|
+      start_at = phase.time_entries.order(:period).first.period.begin.to_date
+      end_at = phase.time_entries.order(:period).last.period.end.to_date
+      phase.update_attributes(period: start_at..end_at)
+    end
+  end
 end
 

@@ -32,6 +32,12 @@ class Phase < Work::Unit
   end
 
   def set_default_name
-    self.name = Date.today.beginning_of_week.to_s(:short) if name.blank?
+    if name.blank?
+      self.name = if period
+                    period.to_s
+                  else
+                    Date.today.beginning_of_week.to_s
+                  end
+    end
   end
 end
