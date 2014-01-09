@@ -6,7 +6,7 @@ class DM2Import::Serializer < ActiveModel::Serializer
     time_entries_persisted_collection.collect do |time_entry|
       work_unit = time_entry.work_unit
       "#{time_entry.duration} minutes on".rjust(15).ljust(20) << " : " <<
-          (work_unit.ancestors.pluck(:name)[1..-1] << work_unit.name).reverse.join(' < ') <<
+          work_unit_ancestors_names(work_unit).reverse.join(' < ') <<
           " [#{time_entry.comment}]"
     end
   end
@@ -22,6 +22,10 @@ class DM2Import::Serializer < ActiveModel::Serializer
   end
 
   private
+
+  def work_unit_ancestors_names(work_unit)
+    (work_unit.ancestors.select(:name, :wuid)[1..-1] << work_unit).collect { |wu| wu.name || wu.wuid }
+  end
 
   def time_entries_persisted_collection
     (object.time_entries || []).select do |time_entry|
