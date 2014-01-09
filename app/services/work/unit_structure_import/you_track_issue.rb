@@ -41,7 +41,6 @@ class Work::UnitStructureImport::YouTrackIssue < Struct.new(:youtrack, :master_i
 
     def sprint
       extract :sprint
-      issue.sprint.first if issue.sprint && issue.sprint.any?
     end
 
     def summary

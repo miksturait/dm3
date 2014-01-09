@@ -38,7 +38,7 @@ describe Dm2::ApiController do
 
       it { should eq({
                          "errors" => [],
-                         "time_entries" => ["  75 minutes on      :  6 Jan [- 360 feedback session]", "  60 minutes on      :  6 Jan [- coworkers communication]"],
+                         "time_entries" => ["  75 minutes on      : 2014-01-06 [- 360 feedback session]", "  60 minutes on      : 2014-01-06 [- coworkers communication]"],
                          "time_entries_data" => "\n2013-11-18\t08:30\t09:45\thrm - 360 feedback session\n2013-11-13\t16:00\t17:00\thrm - coworkers communication\n"}) }
     end
   end
