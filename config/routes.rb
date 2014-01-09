@@ -5,6 +5,6 @@ Dm3::Application.routes.draw do
   resources :coworkers
 
   namespace :dm2 do
-    post "api/workload_import"
+    get "api/workload_import"
   end
 end
