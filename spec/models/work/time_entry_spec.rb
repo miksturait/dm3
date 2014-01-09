@@ -22,4 +22,7 @@ describe Work::TimeEntry do
 
   #   EFFORT_TYPE_REGEX =  /(regular|overtime|weekend|on-site)/i
   pending "V3 :: time entry types"
+
+  pending "time entry period should be in single month"
+  pending "time entry period should be within 1.month back and end of the day ahead"
 end
