@@ -11,7 +11,7 @@ class Work::UnitStructureImport::YouTrackIssue < Struct.new(:youtrack, :master_i
   private
 
   def sprint
-    ::Work::UnitStructureImport::WorkUnitContext.new master_issue.sprint, nil
+    ::Work::UnitStructureImport::WorkUnitContext.new(master_issue.sprint, nil) if master_issue.sprint
   end
 
   def ancestors
@@ -26,9 +26,9 @@ class Work::UnitStructureImport::YouTrackIssue < Struct.new(:youtrack, :master_i
     master_issue.work_unit_context
   end
 
-
   def master_issue
-    @master_issue = Info.new(connection, master_issue_id)
+    @master_issue ||=
+        Info.new(connection, master_issue_id)
   end
 
   delegate :connection, to: :youtrack
@@ -57,7 +57,7 @@ class Work::UnitStructureImport::YouTrackIssue < Struct.new(:youtrack, :master_i
     delegate :unit_uid, to: :work_time_entry_context_context
 
     def work_time_entry_context_context
-     ::Work::ContextFromTextCode.new(id)
+      ::Work::ContextFromTextCode.new(id)
     end
 
     def parent_id
