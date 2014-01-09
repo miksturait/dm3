@@ -48,6 +48,8 @@ describe Work::TimeEntryContext do
         end
       end
     end
+
+    pending "acitve phase should be calculated based on time entry date, not necessary date of today"
   end
 
   # reply from youtrack that is mock'ed is:

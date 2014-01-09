@@ -2,9 +2,9 @@ class Work::UserStatistics < Struct.new(:params)
 
   def summary
     {
+        last_month: last_month,
         this_month: this_month,
-        this_week: this_week,
-        last_month: last_month
+        this_week: this_week
     }
   end
 
@@ -23,11 +23,28 @@ class Work::UserStatistics < Struct.new(:params)
     hours_worked_in_period(period.last_month)
   end
 
+
   def hours_worked_in_period(period)
-    workload = CalculateHoursWorked.new(period, coworker)
-    {
-        hours_worked: "#{workload.hours}:#{workload.minutes}"
-    }
+    DecorateMinutes.decorate(
+        {
+            hours_worked: base_scope(period).sum(:duration)
+        }.merge(per_project_hours_worked_in_period(period))
+    )
+  end
+
+  def per_project_hours_worked_in_period(period)
+    Hash[regroup_by_project(base_scope(period).group(:work_unit_id).sum(:duration)).sort]
+  end
+
+  def regroup_by_project(hours_worked_per_work_unit)
+    hours_worked_per_work_unit.
+        each_with_object(Hash.new { |h, k| h[k] = 0 }) do |key_value, cache|
+      work_unit_id, calculate_hours_worked = *key_value
+      project_name = Project.where("id IN (#{Work::Unit.where(id: work_unit_id).
+          select("UNNEST(REGEXP_SPLIT_TO_ARRAY(ancestry, '/')::integer[]) as id").to_sql})").
+          pluck(:name).first
+      cache[project_name] += calculate_hours_worked
+    end
   end
 
   def coworker
@@ -39,20 +56,30 @@ class Work::UserStatistics < Struct.new(:params)
     params[:coworker_email]
   end
 
-  class CalculateHoursWorked < Struct.new(:period, :coworker)
-    def minutes
-      (total_minutes_worked_in_period % 60).to_s.rjust(2,'0')
-    end
+  def base_scope(period)
+    coworker.time_entries.overlapping_with(period)
+  end
 
-    def hours
-      total_minutes_worked_in_period / 60
+  class DecorateMinutes
+    def self.decorate(hash)
+      hash.each_with_object({}) do |key_value, cache|
+        id, minutes = *key_value
+        TimeFormatter.new(minutes).tap do |presenter|
+          cache[id] = "#{presenter.hours}:#{presenter.minutes}"
+        end
+      end
     end
 
     private
 
-    def total_minutes_worked_in_period
-      @minutes_worked_in_period ||=
-          coworker.time_entries.overlapping_with(period).sum(:duration)
+    class TimeFormatter < Struct.new(:time)
+      def minutes
+        (time % 60).to_s.rjust(2, '0')
+      end
+
+      def hours
+        time / 60
+      end
     end
   end
 

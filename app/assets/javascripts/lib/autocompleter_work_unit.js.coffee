@@ -1,5 +1,5 @@
 $ ->
-  work_unit = $('select[id*="_work_unit_id"]').first()
+  work_unit = $('select[id*="_work_unit_id"], input.autocompleter_work_unit').first()
   field_id = work_unit.attr('id')
   field_name = work_unit.attr('name')
   field_value = work_unit.attr('value')

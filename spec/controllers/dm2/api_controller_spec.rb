@@ -49,7 +49,8 @@ describe Dm2::ApiController do
 
   describe "GET 'statistics'" do
     let(:simon) { create(:coworker, email: 'simon@mikstura.it') }
-    let(:work_unit) { create(:phase) }
+    let(:project) { create(:project, name: 'Global Sourcing Platform')}
+    let(:work_unit) { create(:phase, parent: project) }
     before do
       Timecop.freeze(Time.local(2014, 1, 9))
       create(:time_entry, coworker: simon, period: Time.now..(Time.now+5.hours), work_unit: work_unit)
@@ -69,13 +70,16 @@ describe Dm2::ApiController do
 
     it { should eq({
                        "this_week" => {
-                           "hours_worked" => '5:00'
+                           "hours_worked" => '5:00',
+                           "Global Sourcing Platform"=>"5:00"
                        },
                        "this_month" => {
-                           "hours_worked" => '8:05'
+                           "hours_worked" => '8:05',
+                           "Global Sourcing Platform"=>"8:05"
                        },
                        "last_month" => {
-                           "hours_worked" => '7:15'
+                           "hours_worked" => '7:15',
+                           "Global Sourcing Platform"=>"7:15"
                        }
                    }) }
   end
