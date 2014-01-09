@@ -19,7 +19,7 @@ class Work::UnitStructureImport::YouTrackIssue < Struct.new(:youtrack, :master_i
   end
 
   def detect_ancestors(issue)
-    [detect_ancestors(issue.parent), issue.parent].compact.flatten if issue.parent
+    [detect_ancestors(issue.parent), issue.parent].compact.flatten if issue.respond_to?(:parent) && issue.parent
   end
 
   def master
