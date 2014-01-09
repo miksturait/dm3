@@ -15,11 +15,11 @@ class Work::UnitStructureImport::YouTrackIssue < Struct.new(:youtrack, :master_i
   end
 
   def ancestors
-    detect_ancestors(master_issue).map(&:work_unit_context)
+    (detect_ancestors(master_issue) || []).map(&:work_unit_context)
   end
 
   def detect_ancestors(issue)
-    [detect_ancestors(issue.parent), issue.parent].compact.flatten if issue.respond_to?(:parent) && issue.parent
+    [detect_ancestors(issue.parent), issue.parent].compact.flatten if issue.parent
   end
 
   def master
