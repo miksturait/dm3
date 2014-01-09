@@ -6,5 +6,6 @@ Dm3::Application.routes.draw do
 
   namespace :dm2 do
     get "api/workload_import"
+    get "api/statistics"
   end
 end

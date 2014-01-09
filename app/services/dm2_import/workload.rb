@@ -3,7 +3,6 @@ module DM2Import
     def process
       begin
         begin
-          authenticate!
           import.import!
           import
         rescue => e
@@ -16,10 +15,6 @@ module DM2Import
     end
 
     private
-
-    def authenticate!
-      raise "wrong token" if auth_token != ENV["DM2_AUTH_TOKEN"]
-    end
 
     def import
       @import ||=

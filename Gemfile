@@ -54,6 +54,7 @@ group :development, :test do
   gem 'capistrano-rvm'
   gem 'capistrano-bundler'
   gem 'capistrano-rails', '~> 1.1'
+  gem 'timecop'
 end
 
 group :test do

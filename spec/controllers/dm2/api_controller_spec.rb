@@ -5,16 +5,18 @@ describe Dm2::ApiController do
   describe "GET 'workload_import'" do
     context "failure" do
       let!(:call) {
-        post 'workload_import', {
-            auth_token: '',
-            coworker_email: 'some@email.com',
-            time_entries_data: ''
+        get 'workload_import', {
+            auth_token: '9552211f1ac89d0bb10863a71a92',
+            import: {
+                coworker_email: 'some@email.com',
+                time_entries_data: ''
+            }
         }
       }
       subject(:return_message) { JSON.parse(response.body) }
 
-      it { should eq({"errors" => ["undefined method `[]' for nil:NilClass",
-                                   "{:params=>nil}"],
+      it { should eq({"errors" => ["ActiveRecord::RecordNotFound",
+                                   "{:params=>{\"coworker_email\"=>\"some@email.com\", \"time_entries_data\"=>\"\"}}"],
                       "time_entries" => [],
                       "time_entries_data" => nil}) }
       it { expect(Work::TimeEntry.count).to eq(0) }
@@ -25,13 +27,15 @@ describe Dm2::ApiController do
       let!(:work_unit) { create(:project, wuid: 'hrm') }
 
       let!(:call) {
-        post 'workload_import', import: {
+        get 'workload_import', {
             auth_token: '9552211f1ac89d0bb10863a71a92',
-            coworker_email: 'simon@mikstura.it',
-            time_entries_data: %q{
+            import: {
+                coworker_email: 'simon@mikstura.it',
+                time_entries_data: %q{
 2013-11-18	08:30	09:45	hrm - 360 feedback session
 2013-11-13	16:00	17:00	hrm - coworkers communication
 }
+            }
         }
       }
       subject(:return_message) { JSON.parse(response.body) }
@@ -41,5 +45,38 @@ describe Dm2::ApiController do
                          "time_entries" => ["  75 minutes on      : 2014-01-06 [- 360 feedback session]", "  60 minutes on      : 2014-01-06 [- coworkers communication]"],
                          "time_entries_data" => "\n2013-11-18\t08:30\t09:45\thrm - 360 feedback session\n2013-11-13\t16:00\t17:00\thrm - coworkers communication\n"}) }
     end
+  end
+
+  describe "GET 'statistics'" do
+    let(:simon) { create(:coworker, email: 'simon@mikstura.it') }
+    let(:work_unit) { create(:phase) }
+    before do
+      Timecop.freeze(Time.local(2014, 1, 9))
+      create(:time_entry, coworker: simon, period: Time.now..(Time.now+5.hours), work_unit: work_unit)
+      create(:time_entry, coworker: simon, period: (Time.now-7.days)..(Time.now-7.days+3.hours+5.minutes), work_unit: work_unit)
+      create(:time_entry, coworker: simon, period: (Time.now-14.days)..(Time.now-14.days+7.hours+15.minutes), work_unit: work_unit)
+    end
+    let!(:call) {
+      get 'statistics', {
+          auth_token: '9552211f1ac89d0bb10863a71a92',
+          statistics: {
+              coworker_email: 'simon@mikstura.it'
+          }
+      }
+    }
+
+    subject(:return_message) { JSON.parse(response.body) }
+
+    it { should eq({
+                       "this_week" => {
+                           "hours_worked" => '5:00'
+                       },
+                       "this_month" => {
+                           "hours_worked" => '8:05'
+                       },
+                       "last_month" => {
+                           "hours_worked" => '7:15'
+                       }
+                   }) }
   end
 end
