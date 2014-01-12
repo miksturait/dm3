@@ -52,7 +52,7 @@ class Work::UserStatistics < Struct.new(:params)
     delegate :projects, to: :worked_hours
 
     def all_projects
-      (worked_hours.projects + target_hours.projects).uniq
+      (worked_hours.projects + target_hours.projects).uniq.sort_by(&:name)
     end
 
     def worked_hours
@@ -103,11 +103,7 @@ class Work::UserStatistics < Struct.new(:params)
 
     def per_project_stats
       @per_project_stats ||=
-          Hash[sort_collection_by_project_name]
-    end
-
-    def sort_collection_by_project_name
-      time_per_project.sort_by { |project, project_stats| project.name }
+          time_per_project
     end
 
     def time_per_project
