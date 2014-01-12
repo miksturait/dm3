@@ -5,4 +5,6 @@ class Work::DailyCoworkerTarget < ActiveRecord::Base
 
   validates :work_unit_id, presence: true
   validates :coworker_id, presence: true
+
+  scope :overlapping_with, ->(period) { where(["day >= ? AND day <= ?", period.begin, period.end]) }
 end

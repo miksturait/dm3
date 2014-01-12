@@ -32,7 +32,7 @@ class Work::UserStatistics < Struct.new(:params)
       {
           total: {
               worked: worked_hours.total,
-              target: nil,
+              target: target_hours.total,
               available: available_hours.working_hours
           }
       }.merge(all_projects_to_hash)
@@ -41,29 +41,33 @@ class Work::UserStatistics < Struct.new(:params)
     private
 
     def all_projects_to_hash
-      projects.each_with_object({}) do |project, cache|
+      all_projects.each_with_object({}) do |project, cache|
         cache[project.name] = {
             worked: worked_hours[project],
-            target: nil
+            target: target_hours[project]
         }
       end
     end
 
     delegate :projects, to: :worked_hours
 
+    def all_projects
+      (worked_hours.projects + target_hours.projects).uniq
+    end
+
     def worked_hours
       @worked_hours ||=
           HoursWorkedGroupByProject.new(period, coworker)
     end
 
-    def total_target
-      # have method that can sum that
-      # fetch all targets and combine into single hash
+    def target_hours
+      @target_hours ||=
+          HoursTargetGroupByProject.new(period, coworker)
     end
 
     def available_hours
       @available_hours ||=
-        Work::CalculateWorkingHours.new(period, coworker)
+          Work::CalculateWorkingHours.new(period, coworker)
     end
   end
 
@@ -87,7 +91,7 @@ class Work::UserStatistics < Struct.new(:params)
     end
 
     def [](project)
-      per_project_stats[project]
+      per_project_stats[project] || 0
     end
 
     def projects
@@ -109,7 +113,11 @@ class Work::UserStatistics < Struct.new(:params)
     def time_per_project
       time_per_work_unit.each_with_object(Hash.new { |h, k| h[k] = 0 }) do |(work_unit_id, duration), cache|
         find_project_based_on_descendant_id(work_unit_id).tap do |project|
-          cache[project] += duration
+          begin
+            cache[project] += duration
+          rescue => e
+            binding.pry
+          end
         end
       end
     end
@@ -120,7 +128,16 @@ class Work::UserStatistics < Struct.new(:params)
 
     def find_project_based_on_descendant_id(work_unit_id)
       Project.where("id IN (#{Work::Unit.where(id: work_unit_id).
-          select("UNNEST(REGEXP_SPLIT_TO_ARRAY(ancestry, '/')::integer[]) as id").to_sql})").first
+          select("UNNEST(REGEXP_SPLIT_TO_ARRAY(ancestry, '/')::integer[]) as id").to_sql}) OR id = #{work_unit_id}").
+          first
+    end
+  end
+
+  class HoursTargetGroupByProject < HoursWorkedGroupByProject
+    private
+
+    def time_per_work_unit
+      coworker.daily_targets.overlapping_with(period).group(:work_unit_id).sum(:hours)
     end
   end
 
@@ -136,7 +153,6 @@ class Work::UserStatistics < Struct.new(:params)
   def period_helper
     @period_helper ||= Period.new(Date.today)
   end
-
 
   class Period < Struct.new(:today)
     def all

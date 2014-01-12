@@ -47,7 +47,7 @@ describe Dm2::ApiController do
     end
   end
 
-  describe "GET 'statistics'" do
+  describe "GET 'statistics'", :focus do
     let(:simon) { create(:coworker, email: 'simon@mikstura.it') }
     let(:project) { create(:project, name: 'Global Sourcing Platform') }
     let(:work_unit) { create(:phase, parent: project) }
@@ -56,6 +56,9 @@ describe Dm2::ApiController do
       create(:time_entry, coworker: simon, period: Time.now..(Time.now+5.hours), work_unit: work_unit)
       create(:time_entry, coworker: simon, period: (Time.now-7.days)..(Time.now-7.days+3.hours+5.minutes), work_unit: work_unit)
       create(:time_entry, coworker: simon, period: (Time.now-14.days)..(Time.now-14.days+7.hours+15.minutes), work_unit: work_unit)
+
+      create(:coworker_target, coworker: simon, work_unit: work_unit, period: Date.today-8.days..Date.today-7.days)
+      create(:coworker_target, coworker: simon, work_unit: work_unit, period: Date.today-3.days..Date.today-3.days)
     end
     let!(:call) {
       get 'statistics', {
@@ -73,34 +76,34 @@ describe Dm2::ApiController do
                            "this_week" => {
                                "total" => {
                                    "worked" => 300,
-                                   "target" => nil,
+                                   "target" => 8,
                                    "available" => 40
                                },
                                "Global Sourcing Platform" => {
                                    "worked" => 300,
-                                   "target" => nil
+                                   "target" => 1*8
                                }
                            },
                            "this_month" => {
                                "total" => {
                                    "worked" => 485,
-                                   "target" => nil,
+                                   "target" => 3*8,
                                    "available" => 184
                                },
                                "Global Sourcing Platform" => {
                                    "worked" => 485,
-                                   "target" => nil
+                                   "target" => 3*8
                                }
                            },
                            "last_month" => {
                                "total" => {
                                    "worked" => 435,
-                                   "target" => nil,
+                                   "target" => 0,
                                    "available" => 176
                                },
                                "Global Sourcing Platform" => {
                                    "worked" => 435,
-                                   "target" => nil
+                                   "target" => 0
                                }
                            }
                        },
