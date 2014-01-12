@@ -49,7 +49,7 @@ describe Dm2::ApiController do
 
   describe "GET 'statistics'" do
     let(:simon) { create(:coworker, email: 'simon@mikstura.it') }
-    let(:project) { create(:project, name: 'Global Sourcing Platform')}
+    let(:project) { create(:project, name: 'Global Sourcing Platform') }
     let(:work_unit) { create(:phase, parent: project) }
     before do
       Timecop.freeze(Time.local(2014, 1, 9))
@@ -69,18 +69,45 @@ describe Dm2::ApiController do
     subject(:return_message) { JSON.parse(response.body) }
 
     it { should eq({
-                       "this_week" => {
-                           "hours_worked" => '5:00',
-                           "Global Sourcing Platform"=>"5:00"
+                       "personal" => {
+                           "this_week" => {
+                               "total" => {
+                                   "worked" => 300,
+                                   "target" => nil,
+                                   "available" => 40
+                               },
+                               "Global Sourcing Platform" => {
+                                   "worked" => 300,
+                                   "target" => nil
+                               }
+                           },
+                           "this_month" => {
+                               "total" => {
+                                   "worked" => 485,
+                                   "target" => nil,
+                                   "available" => 184
+                               },
+                               "Global Sourcing Platform" => {
+                                   "worked" => 485,
+                                   "target" => nil
+                               }
+                           },
+                           "last_month" => {
+                               "total" => {
+                                   "worked" => 435,
+                                   "target" => nil,
+                                   "available" => 176
+                               },
+                               "Global Sourcing Platform" => {
+                                   "worked" => 435,
+                                   "target" => nil
+                               }
+                           }
                        },
-                       "this_month" => {
-                           "hours_worked" => '8:05',
-                           "Global Sourcing Platform"=>"8:05"
-                       },
-                       "last_month" => {
-                           "hours_worked" => '7:15',
-                           "Global Sourcing Platform"=>"7:15"
-                       }
+                       "team" => {
+                           "this_week"=>{},
+                           "this_month"=>{},
+                           "last_month"=>{}}
                    }) }
   end
 end

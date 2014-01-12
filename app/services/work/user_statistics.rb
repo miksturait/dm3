@@ -1,49 +1,126 @@
 class Work::UserStatistics < Struct.new(:params)
-
   def summary
     {
-        last_month: last_month,
-        this_month: this_month,
-        this_week: this_week
+        personal: personal_stats_as_hash,
+        team: team_stats_as_hash
     }
   end
 
-
   private
 
-  def this_month
-    hours_worked_in_period(period.this_month)
+  def personal_stats_as_hash
+    personal_stats.each_with_object({}) do |(name, stats), cache|
+      cache[name] = stats.to_hash
+    end
   end
 
-  def this_week
-    hours_worked_in_period(period.this_week)
+  def personal_stats
+    @personal_stats ||=
+        period_helper.all.each_with_object({}) do |(name, period), cache|
+          cache[name] = PersonalStats.new(period, coworker)
+        end
   end
 
-  def last_month
-    hours_worked_in_period(period.last_month)
+  def team_stats_as_hash
+    period_helper.all.each_with_object({}) do |(name, period), cache|
+      cache[name] = TeamStats.new(period, personal_stats[name].projects).to_hash
+    end
   end
 
+  class PersonalStats < Struct.new(:period, :coworker)
+    def to_hash
+      {
+          total: {
+              worked: worked_hours.total,
+              target: nil,
+              available: available_hours.working_hours
+          }
+      }.merge(all_projects_to_hash)
+    end
 
-  def hours_worked_in_period(period)
-    DecorateMinutes.decorate(
-        {
-            hours_worked: base_scope(period).sum(:duration)
-        }.merge(per_project_hours_worked_in_period(period))
-    )
+    private
+
+    def all_projects_to_hash
+      projects.each_with_object({}) do |project, cache|
+        cache[project.name] = {
+            worked: worked_hours[project],
+            target: nil
+        }
+      end
+    end
+
+    delegate :projects, to: :worked_hours
+
+    def worked_hours
+      @worked_hours ||=
+          HoursWorkedGroupByProject.new(period, coworker)
+    end
+
+    def total_target
+      # have method that can sum that
+      # fetch all targets and combine into single hash
+    end
+
+    def available_hours
+      @available_hours ||=
+        Work::CalculateWorkingHours.new(period, coworker)
+    end
   end
 
-  def per_project_hours_worked_in_period(period)
-    Hash[regroup_by_project(base_scope(period).group(:work_unit_id).sum(:duration)).sort]
+  #  project_object: {
+  #    total_worked: 'method', # should take into account hours for current user also
+  #    total_target: 'method',
+  #    coworker_object: {
+  #        worked: 'value_in_minutes',
+  #        target: 'value_in_hours'
+  #    }
+  # }
+  class TeamStats < Struct.new(:period, :projects)
+    def to_hash
+      {}
+    end
   end
 
-  def regroup_by_project(hours_worked_per_work_unit)
-    hours_worked_per_work_unit.
-        each_with_object(Hash.new { |h, k| h[k] = 0 }) do |key_value, cache|
-      work_unit_id, calculate_hours_worked = *key_value
-      project_name = Project.where("id IN (#{Work::Unit.where(id: work_unit_id).
-          select("UNNEST(REGEXP_SPLIT_TO_ARRAY(ancestry, '/')::integer[]) as id").to_sql})").
-          pluck(:name).first
-      cache[project_name] += calculate_hours_worked
+  class HoursWorkedGroupByProject < Struct.new(:period, :coworker)
+    def total
+      per_project_stats.values.sum
+    end
+
+    def [](project)
+      per_project_stats[project]
+    end
+
+    def projects
+      @projects ||=
+          per_project_stats.keys
+    end
+
+    private
+
+    def per_project_stats
+      @per_project_stats ||=
+          Hash[sort_collection_by_project_name]
+    end
+
+    def sort_collection_by_project_name
+      time_per_project.sort_by { |project, project_stats| project.name }
+    end
+
+    def time_per_project
+      time_per_work_unit.each_with_object(Hash.new { |h, k| h[k] = 0 }) do |(work_unit_id, duration), cache|
+        find_project_based_on_descendant_id(work_unit_id).tap do |project|
+          cache[project] += duration
+        end
+      end
+    end
+
+    def time_per_work_unit
+      coworker.time_entries.overlapping_with(period).group(:work_unit_id).sum(:duration)
+    end
+
+    def find_project_based_on_descendant_id(work_unit_id)
+      Project.where("id IN (#{Work::Unit.where(id: work_unit_id).
+          select("UNNEST(REGEXP_SPLIT_TO_ARRAY(ancestry, '/')::integer[]) as id").to_sql})").first
     end
   end
 
@@ -56,38 +133,20 @@ class Work::UserStatistics < Struct.new(:params)
     params[:coworker_email]
   end
 
-  def base_scope(period)
-    coworker.time_entries.overlapping_with(period)
+  def period_helper
+    @period_helper ||= Period.new(Date.today)
   end
 
-  class DecorateMinutes
-    def self.decorate(hash)
-      hash.each_with_object({}) do |key_value, cache|
-        id, minutes = *key_value
-        TimeFormatter.new(minutes).tap do |presenter|
-          cache[id] = "#{presenter.hours}:#{presenter.minutes}"
-        end
-      end
-    end
-
-    private
-
-    class TimeFormatter < Struct.new(:time)
-      def minutes
-        (time % 60).to_s.rjust(2, '0')
-      end
-
-      def hours
-        time / 60
-      end
-    end
-  end
-
-  def period
-    @period ||= Period.new(Date.today)
-  end
 
   class Period < Struct.new(:today)
+    def all
+      {
+          this_week: this_week,
+          this_month: this_month,
+          last_month: last_month
+      }
+    end
+
     def this_month
       month(today)
     end
