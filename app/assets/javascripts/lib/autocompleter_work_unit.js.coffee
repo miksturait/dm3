@@ -15,6 +15,7 @@ $ ->
   autocompleter.select2
     placeholder: "Search for a Work Unit"
     minimumInputLength: 3
+    width: '100%'
     ajax:
       url: "/admin/work_units/autocomplete_work_unit",
       dataType: 'json'
