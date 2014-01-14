@@ -137,6 +137,23 @@ class Work::UserStatistics < Struct.new(:params)
     end
   end
 
+  class AllHoursWorkedGroupByProject < Work::UserStatistics::HoursWorkedGroupByProject
+    def self.this_year
+      period = Date.today-12.days..Date.today-1.days
+      new(period, nil).tap do |ahw|
+        ahw.projects.each do |p|
+          puts("#{p.name} => #{ahw[p]/60}")
+        end
+      end
+    end
+
+    private
+
+    def time_per_work_unit
+      Work::TimeEntry.overlapping_with(period).group(:work_unit_id).sum(:duration)
+    end
+  end
+
   def coworker
     @coworker ||=
         Coworker.where(email: coworker_email).first!
