@@ -137,9 +137,22 @@ class Work::UserStatistics < Struct.new(:params)
     end
   end
 
+  # for project per coworker
+  # fairleads_ids = Project.where(name: 'FairLeads').first.descendant_ids
+  # Work::TimeEntry.overlapping_with(period).where(work_unit_id: fairleads_ids).group(:coworker_id).sum(:duration)
+
   class AllHoursWorkedGroupByProject < Work::UserStatistics::HoursWorkedGroupByProject
     def self.this_year
-      period = Date.today-12.days..Date.today-1.days
+      period = Date.new(2014,1,1)..Date.new(2014,1,26)
+      report(period)
+    end
+
+    def self.last_week
+      period = Date.new(2014,1,13)..Date.new(2014,1,19)
+      report(period)
+    end
+
+    def self.report(period)
       new(period, nil).tap do |ahw|
         ahw.projects.each do |p|
           puts("#{p.name} => #{ahw[p]/60}")
