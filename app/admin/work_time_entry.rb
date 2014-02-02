@@ -7,14 +7,14 @@ ActiveAdmin.register Work::TimeEntry do
        time_entry.work_unit.wuid,
        time_entry.work_unit.name].flatten.compact.join(" > ")
     end
+    column :comment
     column 'coworker' do |time_entry|
       time_entry.coworker.name
     end
-    column :duration
-    column :comment
     column :period do |time_entry|
       time_entry.period.begin.to_s(:short)
     end
+    column :duration
     default_actions
   end
 
