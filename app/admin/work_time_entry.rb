@@ -4,7 +4,8 @@ ActiveAdmin.register Work::TimeEntry do
   index do
     column 'work unit' do |time_entry|
       [time_entry.work_unit.ancestors[2..-1].map(&:name),
-          time_entry.work_unit.name].flatten.compact.join(" > ")
+       time_entry.work_unit.id,
+       time_entry.work_unit.name].flatten.compact.join(" > ")
     end
     column 'coworker' do |time_entry|
       time_entry.coworker.name
