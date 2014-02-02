@@ -24,4 +24,12 @@ ActiveAdmin.register Work::TimeEntry do
     end
   end
 
+  form do |f|
+    f.inputs do
+      f.input :work_unit_id, as: :string,  input_html: { class: 'autocompleter_work_unit' }
+    end
+
+    f.actions
+  end
+
 end
