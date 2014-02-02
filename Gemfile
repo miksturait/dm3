@@ -20,6 +20,7 @@ gem 'simple_form', '>= 3.0.0.rc'
 gem 'ancestry'
 gem 'time_diff'
 gem 'youtrack_api', git: 'https://github.com/eisnerd/youtrack-rest-ruby-library.git'
+gem 'httparty'
 gem "active_model_serializers"
 gem "select2-rails"
 
