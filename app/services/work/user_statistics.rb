@@ -119,7 +119,7 @@ class Work::UserStatistics < Struct.new(:params)
     end
 
     def time_per_work_unit
-      coworker.time_entries.overlapping_with(period).group(:work_unit_id).sum(:duration)
+      coworker.time_entries.within_period(period).group(:work_unit_id).sum(:duration)
     end
 
     def find_project_based_on_descendant_id(work_unit_id)
@@ -133,13 +133,13 @@ class Work::UserStatistics < Struct.new(:params)
     private
 
     def time_per_work_unit
-      coworker.daily_targets.overlapping_with(period).group(:work_unit_id).sum(:hours)
+      coworker.daily_targets.within_period(period).group(:work_unit_id).sum(:hours)
     end
   end
 
   # for project per coworker
   # fairleads_ids = Project.where(name: 'FairLeads').first.descendant_ids
-  # Work::TimeEntry.overlapping_with(period).where(work_unit_id: fairleads_ids).group(:coworker_id).sum(:duration)
+  # Work::TimeEntry.within_period(period).where(work_unit_id: fairleads_ids).group(:coworker_id).sum(:duration)
 
   class AllHoursWorkedGroupByProject < Work::UserStatistics::HoursWorkedGroupByProject
     def self.this_year
@@ -163,7 +163,7 @@ class Work::UserStatistics < Struct.new(:params)
     private
 
     def time_per_work_unit
-      Work::TimeEntry.overlapping_with(period).group(:work_unit_id).sum(:duration)
+      Work::TimeEntry.within_period(period).group(:work_unit_id).sum(:duration)
     end
   end
 
@@ -204,11 +204,11 @@ class Work::UserStatistics < Struct.new(:params)
     private
 
     def month(date)
-      date.beginning_of_month..date.end_of_month
+      date.beginning_of_month..date.end_of_month.end_of_day
     end
 
     def week(date)
-      date.beginning_of_week..date.end_of_week
+      date.beginning_of_week..date.end_of_week.end_of_day
     end
 
     def last_day_of_previous_month
