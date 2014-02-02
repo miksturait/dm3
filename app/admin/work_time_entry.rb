@@ -11,7 +11,7 @@ ActiveAdmin.register Work::TimeEntry do
     column 'coworker' do |time_entry|
       time_entry.coworker.name
     end
-    column :period do |time_entry|
+    column 'start at' do |time_entry|
       time_entry.period.begin.to_s(:short)
     end
     column :duration
