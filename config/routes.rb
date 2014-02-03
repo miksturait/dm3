@@ -8,5 +8,6 @@ Dm3::Application.routes.draw do
     get "api/workload_import"
     get "api/statistics"
     get "api/summary"
+    get "api/projects"
   end
 end

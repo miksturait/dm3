@@ -18,12 +18,18 @@ class Dm2::ApiController < ApplicationController
            root: false
   end
 
+  def projects
+    render json: Project.skip_archived.load,
+           each_serializer: DM2::ProjectSerializer,
+           root: false
+  end
+
 
   private
 
   def summary_object
     @summary_object ||=
-        Work::Summary.new(params[:q])
+        Work::SummaryDataForTree.new(params[:q])
   end
 
   def statistics_object

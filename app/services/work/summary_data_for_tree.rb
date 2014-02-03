@@ -7,7 +7,7 @@ class Work::SummaryDataForTree < Struct.new(:params)
 
   def root_data
     [
-        decorate_work_unit(project).tap { |project_info| project_info.delete(:parent_id) }
+        decorate_work_unit(project, true).tap { |project_info| project_info.delete(:parent_id) }
     ]
   end
 
@@ -15,8 +15,8 @@ class Work::SummaryDataForTree < Struct.new(:params)
     descendants_sorted.collect { |work_unit| decorate_work_unit(work_unit) }.compact
   end
 
-  def decorate_work_unit(work_unit)
-    if (workload = work_unit.time_entries.within_period(period).sum(:duration)) > 0
+  def decorate_work_unit(work_unit, include_empty=false)
+    if (workload = work_unit.time_entries.within_period(period).sum(:duration)) > 0 or include_empty
       {id: work_unit.id, parent_id: work_unit.parent_id, label: work_unit.label, workload: workload}
     end
   end
