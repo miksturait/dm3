@@ -22,6 +22,10 @@ class Work::Unit < ActiveRecord::Base
     Work::TimeEntry.where(work_unit_id: subtree_ids)
   end
 
+  def label
+    [wuid, name].compact.join(" - ")
+  end
+
   def create_children(attrs={})
     build_children(attrs).tap { |work_unit| work_unit.save }
   end

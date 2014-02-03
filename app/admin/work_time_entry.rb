@@ -2,11 +2,7 @@ ActiveAdmin.register Work::TimeEntry do
   menu parent: "Work Unit's", priority: 6
 
   index do
-    column 'work unit' do |time_entry|
-      [time_entry.work_unit.ancestors[2..-1].collect {|wu| [wu.wuid, wu.name].compact.first },
-       time_entry.work_unit.wuid,
-       time_entry.work_unit.name].flatten.compact.join(" > ")
-    end
+    column :label
     column :comment
     column 'coworker' do |time_entry|
       time_entry.coworker.name
@@ -26,7 +22,7 @@ ActiveAdmin.register Work::TimeEntry do
 
   form do |f|
     f.inputs do
-      f.input :work_unit_id, as: :string,  input_html: { class: 'autocompleter_work_unit' }
+      f.input :work_unit_id, as: :string, input_html: {class: 'autocompleter_work_unit'}
     end
 
     f.actions

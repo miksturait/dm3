@@ -18,6 +18,10 @@ class Project < Work::Unit
     opts && opts.has_key?("youtrack")
   end
 
+  def label
+    name
+  end
+
   private
 
   def detect_active_phase

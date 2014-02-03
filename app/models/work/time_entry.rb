@@ -33,7 +33,15 @@ class Work::TimeEntry < ActiveRecord::Base
            to: :period,
            prefix: true, allow_nil: true
 
+  def label
+    work_unit_ancestors_without_client_customer.map(&:label).join(" > ")
+  end
+
   private
+
+  def work_unit_ancestors_without_client_customer
+    work_unit.ancestors.from_depth(2) << work_unit
+  end
 
   def check_inclusion
     errors[:period] << "overlaps already created record" if inclusive?
