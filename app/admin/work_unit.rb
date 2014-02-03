@@ -1,5 +1,6 @@
 ActiveAdmin.register Work::Unit do
   menu parent: "Work Unit's", priority: 5
+  permit_params :name
 
   collection_action :autocomplete_work_unit, :method => :get
 
@@ -13,5 +14,13 @@ ActiveAdmin.register Work::Unit do
     def scoped_collection
       Work::Unit.where(type: nil)
     end
+  end
+
+  form do |f|
+    f.inputs do
+      f.input :name, as: :string
+    end
+
+    f.actions
   end
 end
