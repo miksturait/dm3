@@ -13,8 +13,18 @@ class Dm2::ApiController < ApplicationController
            root: false
   end
 
+  def summary
+    render json: summary_object.data,
+           root: false
+  end
+
 
   private
+
+  def summary_object
+    @summary_object ||=
+        Work::Summary.new(params[:q])
+  end
 
   def statistics_object
     @statistcs_object ||=

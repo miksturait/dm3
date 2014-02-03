@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Work::SummaryDataForTree, :focus do
+describe Work::SummaryDataForTree do
   let(:ccc) { create(:project, name: 'Credit Card Comparison') }
   let(:ccc_sprint) { create(:phase, parent: ccc, name: 'Jan \'14') }
   let(:ccc_work_unit) { create(:work_unit, parent: ccc_sprint, wuid: '145') }

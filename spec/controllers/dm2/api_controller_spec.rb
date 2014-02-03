@@ -25,6 +25,7 @@ describe Dm2::ApiController do
     context "success" do
       let!(:coworker) { create(:coworker, email: 'simon@mikstura.it') }
       let!(:work_unit) { create(:project, wuid: 'hrm') }
+      let!(:phase) { create(:phase, parent: work_unit, name: '2014-01-06') }
 
       let!(:call) {
         get 'workload_import', {
@@ -113,4 +114,6 @@ describe Dm2::ApiController do
                            "last_month"=>{}}
                    }) }
   end
+
+  pending 'get - summary'
 end
