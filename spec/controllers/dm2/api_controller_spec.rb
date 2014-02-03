@@ -47,7 +47,7 @@ describe Dm2::ApiController do
     end
   end
 
-  describe "GET 'statistics'", :focus do
+  describe "GET 'statistics'" do
     let(:simon) { create(:coworker, email: 'simon@mikstura.it') }
     let(:project) { create(:project, name: 'Global Sourcing Platform') }
     let(:work_unit) { create(:phase, parent: project) }

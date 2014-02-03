@@ -6,4 +6,8 @@ FactoryGirl.define do
   factory :project do
     wuid { generate(:wuid) }
   end
+
+  factory :work_unit, class: Work::Unit do
+    wuid { generate(:wuid) }
+  end
 end
