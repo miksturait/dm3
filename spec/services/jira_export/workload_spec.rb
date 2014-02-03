@@ -3,14 +3,14 @@
 #   https://vtelligence.atlassian.net/rest/api/2/issue/SPD-566/worklog\?adjustEstimate\=auto
 
 
-class Jira
-
-end
-
-describe JiraExport::Workload do
-
-  # example time entry for example project
-
-  # have an service class
-
-end
+#class Jira
+#
+#end
+#
+#describe JiraExport::Workload do
+#
+#  # example time entry for example project
+#
+#  # have an service class
+#
+#end
