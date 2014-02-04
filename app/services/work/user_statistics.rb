@@ -7,7 +7,7 @@ class Work::UserStatistics < Struct.new(:params)
       hours = time / 60
       minutes = time % 60
       unless time == 0
-        [coworker.name, "#{hours}:#{minutes.to_s.rjust(2,'0')}", time/60.0]
+        [coworker.name.ljust(30, ' '), "#{hours}:#{minutes.to_s.rjust(2,'0')}".rjust(8, ' '), sprintf("%0.02f", (time/60.0).round(2)).rjust(8, ' ')]
       end
     end.compact
 
