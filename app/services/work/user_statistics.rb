@@ -1,4 +1,19 @@
 class Work::UserStatistics < Struct.new(:params)
+  def self.last_month_summary
+    period = Work::UserStatistics.new.send(:period_helper)
+
+    results = Coworker.all.collect do |coworker|
+      time = coworker.time_entries.within_period(period.last_month).sum(:duration)
+      hours = time / 60
+      minutes = time % 60
+      unless time == 0
+        [coworker.name, "#{hours}:#{minutes.to_s.rjust(2,'0')}", time/60.0]
+      end
+    end.compact
+
+    pp results.to_a
+  end
+
   def summary
     {
         personal: personal_stats_as_hash,
@@ -143,12 +158,12 @@ class Work::UserStatistics < Struct.new(:params)
 
   class AllHoursWorkedGroupByProject < Work::UserStatistics::HoursWorkedGroupByProject
     def self.this_year
-      period = Date.new(2014,1,1)..Date.new(2014,1,26)
+      period = Date.new(2014, 1, 1)..Date.new(2014, 1, 26)
       report(period)
     end
 
     def self.last_week
-      period = Date.new(2014,1,13)..Date.new(2014,1,19)
+      period = Date.new(2014, 1, 13)..Date.new(2014, 1, 19)
       report(period)
     end
 

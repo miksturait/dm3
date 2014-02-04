@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe Work::UserStatistics do
+
+  pending 'refactor last month summary'
+
   # lazy loading - don't calculate as long as you don't need
   {
       this_week: {
