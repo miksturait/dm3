@@ -14,3 +14,31 @@
 #  # have an service class
 #
 #end
+
+#class JiraAPI
+#  include HTTParty
+#  base_uri 'https://vtelligence.atlassian.net/jira/rest/api/2/'
+#
+#  def initialize()
+#    @auth = {}
+#    #time_entry.period.begin.utc.iso8601
+#    def worklog(time, date, username, issue)
+#      options = {
+#          body:
+#              {
+#                  #self: "http://www.example.com/jira/rest/api/2/issue/10010/worklog/10000",
+#                  author: {
+#                      self: "http://www.example.com/jira/rest/api/2/user?username=michalczyz@gmail.com",
+#                      updateAuthor: {
+#                          self: "http://www.example.com/jira/rest/api/2/user?username=#{username}",
+#                      },
+#                      comment: ".",
+#                      started: start_at,
+#                      timeSpentSeconds: time,
+#                  },
+#                  basic_auth: {:username => 'michalczyz@gmail.com', :password => 'SUApP8yHvqhg'}
+#              }
+#      self.class.post("issue/#{issue}/worklog", options)
+#    end
+#  end
+#end
