@@ -7,7 +7,7 @@ class Work::SummaryDataForTree < Struct.new(:params)
 
   def root_data
     [
-        decorate_work_unit(project, true).tap { |project_info| project_info.delete(:parent_id) }
+        decorate_work_unit(work_unit, true).tap { |work_unit_info| work_unit_info.delete(:parent_id) }
     ]
   end
 
@@ -25,11 +25,11 @@ class Work::SummaryDataForTree < Struct.new(:params)
     descendants.sort_by { |work_unit| [work_unit.ancestry, work_unit.id].join("/") }
   end
 
-  delegate :descendants, to: :project
+  delegate :descendants, to: :work_unit
 
-  def project
-    @project ||=
-        Project.find(opts.project_id)
+  def work_unit
+    @work_unit ||=
+        Work::Unit.find(opts.work_unit_id)
   end
 
   def period

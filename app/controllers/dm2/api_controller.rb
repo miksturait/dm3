@@ -18,9 +18,9 @@ class Dm2::ApiController < ApplicationController
            root: false
   end
 
-  def projects
-    render json: Project.skip_archived.load,
-           each_serializer: DM2::ProjectSerializer,
+  def work_units
+    render json: Dm2::UnitForAutocompleter.find(params[:term]),
+           each_serializer: WorkUnitAutocompleterSerializer,
            root: false
   end
 
