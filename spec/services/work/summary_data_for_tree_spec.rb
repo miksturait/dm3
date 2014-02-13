@@ -9,9 +9,9 @@ describe Work::SummaryDataForTree do
 
   before do
     begin_of_month_period = Time.parse('2014-01-01 14:00')..Time.parse('2014-01-01 16:00')
-    end_of_month_period = Time.parse('2014-01-31 17:00')..Time.parse('2014-01-31 19:00')
-    last_month_period = Time.parse('2013-12-31 14:00')..Time.parse('2013-12-31 14:30')
-    next_month_period = Time.parse('2014-02-01 19:00')..Time.parse('2014-02-01 19:45')
+    end_of_month_period   = Time.parse('2014-01-31 17:00')..Time.parse('2014-01-31 19:00')
+    last_month_period     = Time.parse('2013-12-31 14:00')..Time.parse('2013-12-31 14:30')
+    next_month_period     = Time.parse('2014-02-01 19:00')..Time.parse('2014-02-01 19:45')
 
     [end_of_month_period, last_month_period, next_month_period].each do |period|
       create(:time_entry, period: period, work_unit: ccc_sprint)
@@ -29,13 +29,13 @@ describe Work::SummaryDataForTree do
 
   it { expect(summary.data).
       to eq([
-                {:id => ccc.id,
-                 :label => ccc.name, :workload => 240},
-                {:id => ccc_sprint.id, :parent_id => ccc.id,
-                 :label => "Jan '14", :workload => 240},
-                {:id => ccc_work_unit.id, :parent_id => ccc_sprint.id,
-                 :label => "145", :workload => 120}
+                {id:    ccc.id,
+                 label: ccc.name, workload: 240},
+                {id:    ccc_sprint.id, parent_id: ccc.id,
+                 label: "Jan '14", workload: 240},
+                {id:    ccc_work_unit.id, parent_id: ccc_sprint.id,
+                 label: "145", workload: 120}
             ]) }
 
-  pending 'some optimalisation require for fetching descendants - pick subtree that is relevant for curent period only'
+  pending 'some optimization require for fetching descendants - pick subtree that is relevant for current period only'
 end
