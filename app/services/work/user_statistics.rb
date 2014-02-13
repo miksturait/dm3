@@ -116,6 +116,8 @@ class Work::UserStatistics < Struct.new(:params)
 
     private
 
+    delegate :time_entries, to: :coworker
+
     def time_per_project
       @time_per_project ||=
           calculate_time_per_project
@@ -134,7 +136,7 @@ class Work::UserStatistics < Struct.new(:params)
     end
 
     def time_per_work_unit
-      coworker.time_entries.within_period(period).group(:work_unit_id).sum(:duration)
+      time_entries.within_period(period).group(:work_unit_id).sum(:duration)
     end
 
     def find_project_based_on_descendant_id(work_unit_id)
