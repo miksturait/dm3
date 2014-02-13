@@ -4,9 +4,9 @@ class Project < Work::Unit
 
   validates :wuid,
             presence: true,
-            format: {
-                with: /\A[a-z\_\.0-9]+\z/,
-                message: "only small letters and underscores allowed",
+            format:   {
+                with:      /\A[a-z\_\.0-9]+\z/,
+                message:   'only small letters and underscores allowed',
                 allow_nil: true
             }
 
@@ -15,7 +15,7 @@ class Project < Work::Unit
   end
 
   def is_connected_with_youtrack?
-    opts && opts.has_key?("youtrack")
+    opts && opts.has_key?('youtrack')
   end
 
   def label
