@@ -1,6 +1,6 @@
 class Work::UserStatistics < Struct.new(:params)
   def self.last_month_summary
-    period = Work::UserStatistics.new.send(:period_helper)
+    period = Work::UserStatistics.new.send(:current_period)
 
     results = Coworker.all.collect do |coworker|
       time = coworker.time_entries.within_period(period.last_month).sum(:duration)
@@ -31,13 +31,13 @@ class Work::UserStatistics < Struct.new(:params)
 
   def personal_stats
     @personal_stats ||=
-        period_helper.all.each_with_object({}) do |(name, period), cache|
+        current_period.all.each_with_object({}) do |(name, period), cache|
           cache[name] = PersonalStats.new(period, coworker)
         end
   end
 
   def team_stats_as_hash
-    period_helper.all.each_with_object({}) do |(name, period), cache|
+    current_period.all.each_with_object({}) do |(name, period), cache|
       cache[name] = TeamStats.new(period, personal_stats[name].projects).to_hash
     end
   end
@@ -191,7 +191,7 @@ class Work::UserStatistics < Struct.new(:params)
     params[:coworker_email]
   end
 
-  def period_helper
+  def current_period
     @period_helper ||= Period.new(Date.today)
   end
 
