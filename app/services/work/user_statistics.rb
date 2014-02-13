@@ -102,26 +102,26 @@ class Work::UserStatistics < Struct.new(:params)
 
   class HoursWorkedGroupByProject < Struct.new(:period, :coworker)
     def total
-      per_project_stats.values.sum
+      time_per_project.values.sum
     end
 
     def [](project)
-      per_project_stats[project] || 0
+      time_per_project[project] || 0
     end
 
     def projects
       @projects ||=
-          per_project_stats.keys
+          time_per_project.keys
     end
 
     private
 
-    def per_project_stats
-      @per_project_stats ||=
-          time_per_project
+    def time_per_project
+      @time_per_project ||=
+          calculate_time_per_project
     end
 
-    def time_per_project
+    def calculate_time_per_project
       time_per_work_unit.each_with_object(Hash.new { |h, k| h[k] = 0 }) do |(work_unit_id, duration), cache|
         find_project_based_on_descendant_id(work_unit_id).tap do |project|
           begin
