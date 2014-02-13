@@ -23,7 +23,7 @@ describe Work::SummaryDataForTree do
     end
   end
 
-  let(:params) { {start_at: '2014-01-01', end_at: '2014-01-31', project_id: ccc.id} }
+  let(:params) { {start_at: '2014-01-01', end_at: '2014-01-31', work_unit_id: ccc.id} }
   let(:summary) { described_class.new(params) }
   subject { summary.data }
 
