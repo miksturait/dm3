@@ -126,11 +126,7 @@ class Work::UserStatistics < Struct.new(:params)
     def calculate_time_per_project
       time_per_work_unit.each_with_object(Hash.new { |h, k| h[k] = 0 }) do |(work_unit_id, duration), cache|
         find_project(work_unit_id).tap do |project|
-          begin
-            cache[project] += duration
-          rescue => e
-            binding.pry
-          end
+          cache[project] += duration
         end
       end
     end
