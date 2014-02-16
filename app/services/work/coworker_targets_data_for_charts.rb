@@ -6,11 +6,10 @@ class Work::CoworkerTargetsDataForCharts
     end.join(",\n")
   end
 
-
   class TargetInfo < Struct.new(:coworker_target)
 
     def info
-     %Q{["#{coworker_label}", "#{project_name}", #{start_at}, #{end_at}]}
+      %Q{["#{coworker_label}", "#{project_name}", #{start_at}, #{end_at}]}
     end
 
     delegate :email, to: :coworker
@@ -39,8 +38,11 @@ class Work::CoworkerTargetsDataForCharts
     end
 
     def find_project_based_on_descendant_id(work_unit_id)
-      Project.where("id IN (#{Work::Unit.where(id: work_unit_id).
-          select("UNNEST(REGEXP_SPLIT_TO_ARRAY(ancestry, '/')::integer[]) as id").to_sql}) OR id = #{work_unit_id}")
+      Project.where("id IN (#{descendant_ids_query(work_unit_id)}) OR id = #{work_unit_id}")
+    end
+
+    def descendant_ids_query(work_unit_id)
+      Work::Unit.where(id: work_unit_id).select("UNNEST(REGEXP_SPLIT_TO_ARRAY(ancestry, '/')::integer[]) as id").to_sql
     end
   end
 end

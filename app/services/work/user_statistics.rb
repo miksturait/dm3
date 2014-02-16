@@ -140,9 +140,11 @@ class Work::UserStatistics < Struct.new(:params)
     end
 
     def find_project_based_on_descendant_id(work_unit_id)
-      Project.where("id IN (#{Work::Unit.where(id: work_unit_id).
-          select("UNNEST(REGEXP_SPLIT_TO_ARRAY(ancestry, '/')::integer[]) as id").to_sql}) OR id = #{work_unit_id}").
-          first
+      Project.where("id IN (#{descendant_ids_query(work_unit_id).to_sql}) OR id = #{work_unit_id}").first
+    end
+
+    def descendant_ids_query(work_unit_id)
+      Work::Unit.where(id: work_unit_id).select("UNNEST(REGEXP_SPLIT_TO_ARRAY(ancestry, '/')::integer[]) as id").to_sql
     end
   end
 
