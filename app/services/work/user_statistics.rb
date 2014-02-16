@@ -3,11 +3,11 @@ class Work::UserStatistics < Struct.new(:params)
     period = Work::UserStatistics.new.send(:current_period)
 
     results = Coworker.all.collect do |coworker|
-      time = coworker.time_entries.within_period(period.last_month).sum(:duration)
-      hours = time / 60
+      time    = coworker.time_entries.within_period(period.last_month).sum(:duration)
+      hours   = time / 60
       minutes = time % 60
       unless time == 0
-        [coworker.name.ljust(30, ' '), "#{hours}:#{minutes.to_s.rjust(2,'0')}".rjust(8, ' '), sprintf("%0.02f", (time/60.0).round(2)).rjust(8, ' ')]
+        [coworker.name.ljust(30, ' '), "#{hours}:#{minutes.to_s.rjust(2, '0')}".rjust(8, ' '), sprintf("%0.02f", (time/60.0).round(2)).rjust(8, ' ')]
       end
     end.compact
 
@@ -17,7 +17,7 @@ class Work::UserStatistics < Struct.new(:params)
   def summary
     {
         personal: personal_stats_as_hash,
-        team: team_stats_as_hash
+        team:     team_stats_as_hash
     }
   end
 
@@ -46,8 +46,8 @@ class Work::UserStatistics < Struct.new(:params)
     def to_hash
       {
           total: {
-              worked: worked_hours.total,
-              target: target_hours.total,
+              worked:    worked_hours.total,
+              target:    target_hours.total,
               available: available_hours.working_hours
           }
       }.merge(all_projects_to_hash)
@@ -140,11 +140,7 @@ class Work::UserStatistics < Struct.new(:params)
     end
 
     def find_project_based_on_descendant_id(work_unit_id)
-      Project.where("id IN (#{descendant_ids_query(work_unit_id)}) OR id = #{work_unit_id}").first
-    end
-
-    def descendant_ids_query(work_unit_id)
-      Work::Unit.descendant_ids(work_unit_id).to_sql
+      Project.related_to_descendant_id(work_unit_id).first
     end
   end
 
@@ -202,7 +198,7 @@ class Work::UserStatistics < Struct.new(:params)
   class Period < Struct.new(:today)
     def all
       {
-          this_week: this_week,
+          this_week:  this_week,
           this_month: this_month,
           last_month: last_month
       }

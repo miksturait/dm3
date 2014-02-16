@@ -10,6 +10,11 @@ class Project < Work::Unit
                 allow_nil: true
             }
 
+  def self.related_to_descendant_id(id)
+    descendant_ids_query = Work::Unit.descendant_ids(id).to_sql
+    where("id IN (#{descendant_ids_query}) OR id = #{id}")
+  end
+
   def active_phase
     detect_active_phase || create_children
   end

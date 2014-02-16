@@ -38,11 +38,7 @@ class Work::CoworkerTargetsDataForCharts
     end
 
     def find_project_based_on_descendant_id(work_unit_id)
-      Project.where("id IN (#{descendant_ids_query(work_unit_id)}) OR id = #{work_unit_id}")
-    end
-
-    def descendant_ids_query(work_unit_id)
-      Work::Unit.descendant_ids(work_unit_id).to_sql
+      Project.related_to_descendant_id(work_unit_id)
     end
   end
 end
