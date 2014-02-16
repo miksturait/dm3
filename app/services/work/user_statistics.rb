@@ -125,7 +125,7 @@ class Work::UserStatistics < Struct.new(:params)
 
     def calculate_time_per_project
       time_per_work_unit.each_with_object(Hash.new { |h, k| h[k] = 0 }) do |(work_unit_id, duration), cache|
-        find_project_based_on_descendant_id(work_unit_id).tap do |project|
+        find_project(work_unit_id).tap do |project|
           begin
             cache[project] += duration
           rescue => e
@@ -139,7 +139,7 @@ class Work::UserStatistics < Struct.new(:params)
       time_entries.within_period(period).group(:work_unit_id).sum(:duration)
     end
 
-    def find_project_based_on_descendant_id(work_unit_id)
+    def find_project(work_unit_id)
       Project.related_to_descendant_id(work_unit_id).first
     end
   end
