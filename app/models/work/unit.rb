@@ -12,11 +12,13 @@ class Work::Unit < ActiveRecord::Base
             }
 
   scope :skip_archived, -> { where("opts @> hstore('archived', 'false')") }
+  scope :descendant_ids, ->(id) do
+    where(id: id).select("UNNEST(REGEXP_SPLIT_TO_ARRAY(ancestry, '/')::integer[]) as id")
+  end
 
   delegate :begin, :end,
            to: :period,
            prefix: true, allow_nil: true
-
 
   def time_entries
     Work::TimeEntry.where(work_unit_id: subtree_ids)

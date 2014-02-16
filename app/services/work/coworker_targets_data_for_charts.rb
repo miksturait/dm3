@@ -42,7 +42,7 @@ class Work::CoworkerTargetsDataForCharts
     end
 
     def descendant_ids_query(work_unit_id)
-      Work::Unit.where(id: work_unit_id).select("UNNEST(REGEXP_SPLIT_TO_ARRAY(ancestry, '/')::integer[]) as id").to_sql
+      Work::Unit.descendant_ids(work_unit_id).to_sql
     end
   end
 end
