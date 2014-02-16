@@ -34,11 +34,11 @@ class Work::CoworkerTargetsDataForCharts
     end
 
     def project_name
-      project(coworker_target.work_unit_id).pluck(:name).first
+      project.pluck(:name).first
     end
 
-    def project(work_unit_id)
-      Project.related_to_descendant_id(work_unit_id)
+    def project
+      Project.related_to_descendant_id(coworker_target.work_unit_id)
     end
   end
 end
