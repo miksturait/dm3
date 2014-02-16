@@ -17,6 +17,8 @@ class Work::CoworkerTargetsDataForCharts
 
     private
 
+    delegate :name, to: :project, with_prefix: true
+
     def start_at
       convert_date_to_js(period.begin)
     end
@@ -31,10 +33,6 @@ class Work::CoworkerTargetsDataForCharts
 
     def coworker_label
       email + " [#{cache_of_total_hours}]"
-    end
-
-    def project_name
-      project.name
     end
 
     def project
