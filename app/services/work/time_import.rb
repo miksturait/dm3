@@ -29,7 +29,7 @@ class Work::TimeImport < Struct.new(:coworker, :time_entries_data)
   end
 
   def invalid_time_entries
-    time_entries.select { |time_entry| time_entry.errors.present? }
+    time_entries.select(&:invalid?)
   end
 
   def clear_errors
