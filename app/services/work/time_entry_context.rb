@@ -1,5 +1,4 @@
 class Work::TimeEntryContext < Struct.new(:context_code)
-
   def work_unit
     begin
       (detect_unit if unit_uid) || phase
@@ -10,10 +9,14 @@ class Work::TimeEntryContext < Struct.new(:context_code)
   end
 
   def exception
-    @exception ? @exception : work_unit; @exception
+    @exception ? @exception : work_unit
+    @exception
   end
 
   private
+
+  delegate :descendants, to: :phase
+  delegate :project_wuid, :unit_uid, to: :context
 
   def phase
     @phase ||= project.active_phase
@@ -27,8 +30,6 @@ class Work::TimeEntryContext < Struct.new(:context_code)
     end
   end
 
-  delegate :descendants, to: :phase
-
   def detect_unit
     if project.is_connected_with_youtrack?
       youtrack_recreator.recreate
@@ -41,14 +42,15 @@ class Work::TimeEntryContext < Struct.new(:context_code)
         Youtrack::RecreateWorkUnitStructure.new(project, context_code)
   end
 
-  delegate :project_wuid, :unit_uid, to: :context
-
   def context
     @context ||= Work::ContextFromTextCode.new(context_code)
   end
 
   module Youtrack
     class RecreateWorkUnitStructure < Struct.new(:project, :context_code)
+      delegate :active_phase, to: :project
+      delegate :work_unit_contexts, to: :issue
+
       def recreate
         creator.process
       rescue => e
@@ -60,9 +62,6 @@ class Work::TimeEntryContext < Struct.new(:context_code)
         @creator ||=
             Work::UnitStructureImport::RecreateBasedOnWorkUnitContext.new(active_phase, work_unit_contexts)
       end
-
-      delegate :active_phase, to: :project
-      delegate :work_unit_contexts, to: :issue
 
       def issue
         @issue ||=
@@ -79,7 +78,7 @@ class Work::TimeEntryContext < Struct.new(:context_code)
       end
 
       def youtrack_config_code
-        project.opts["youtrack"]
+        project.opts['youtrack']
       end
     end
   end
