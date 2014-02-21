@@ -205,7 +205,7 @@ class Work::UserStatistics < Struct.new(:params)
     end
 
     def this_week
-      week(today)
+      today.beginning_of_week..today.end_of_week.end_of_day
     end
 
     def last_month
@@ -216,10 +216,6 @@ class Work::UserStatistics < Struct.new(:params)
 
     def month(date)
       date.beginning_of_month..date.end_of_month.end_of_day
-    end
-
-    def week(date)
-      date.beginning_of_week..date.end_of_week.end_of_day
     end
 
     def last_day_of_previous_month
