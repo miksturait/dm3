@@ -2,7 +2,7 @@ class Work::TimeEntryContext < Struct.new(:context_code)
 
   def work_unit
     begin
-      detect_unit || phase
+      (detect_unit if unit_uid) || phase
     rescue ActiveRecord::RecordNotFound => e
       @exception = {work_unit_id: [e]}
       return
@@ -30,10 +30,8 @@ class Work::TimeEntryContext < Struct.new(:context_code)
   delegate :descendants, to: :phase
 
   def detect_unit
-    if unit_uid
-      try_to_recreate_work_unit_structure_based_on_youtrack
-      descendants.where(wuid: unit_uid).first || phase.children.create(wuid: unit_uid)
-    end
+    try_to_recreate_work_unit_structure_based_on_youtrack
+    descendants.where(wuid: unit_uid).first || phase.children.create(wuid: unit_uid)
   end
 
   def try_to_recreate_work_unit_structure_based_on_youtrack
