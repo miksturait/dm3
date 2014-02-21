@@ -1,13 +1,7 @@
 module Dm2
   class Base < ActiveRecord::Base
-    config = {
-        adapter:  'mysql',
-        host:     'localhost',
-        database: 'dm2',
-        username: 'root',
-        password: ''
-    }
     self.abstract_class = true
-    establish_connection config
+
+    establish_connection ENV['DM2_DATABASE_CONFIG']
   end
 end
