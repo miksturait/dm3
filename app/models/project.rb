@@ -19,16 +19,12 @@ class Project < Work::Unit
     detect_active_phase || create_children
   end
 
-  def is_connected_with_youtrack?
-    opts && opts.has_key?('youtrack')
-  end
-
   def label
     name
   end
 
   def work_unit_recreator_class
-    if opts && opts.has_key?('youtrack')
+    if is_connected_with_youtrack?
       Youtrack::WorkUnitRecreator
     else
       NullServices::WorkUnitRecreator
@@ -36,6 +32,10 @@ class Project < Work::Unit
   end
 
   private
+
+  def is_connected_with_youtrack?
+    opts && opts.has_key?('youtrack')
+  end
 
   def detect_active_phase
     children_class.where(ancestry: child_ancestry).active.last
