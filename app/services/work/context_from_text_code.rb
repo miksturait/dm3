@@ -7,10 +7,6 @@ class Work::ContextFromTextCode < Struct.new(:context_code)
     match[:unit]
   end
 
-  def nofollow
-    match[:nofollow]
-  end
-
   private
 
   def match

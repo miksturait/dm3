@@ -50,7 +50,7 @@ class Work::TimeEntryContext < Struct.new(:context_code)
         Youtrack::RecreateWorkUnitStructure.new(project, context_code)
   end
 
-  delegate :project_wuid, :unit_uid, :nofollow, to: :context
+  delegate :project_wuid, :unit_uid, to: :context
 
   def context
     @context ||= Work::ContextFromTextCode.new(context_code)
