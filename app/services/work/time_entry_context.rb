@@ -38,15 +38,15 @@ class Work::TimeEntryContext < Struct.new(:context_code)
 
   def recreate_work_unit_structure_based_on_youtrack
     begin
-      rwusboy.process
+      youtrack_recreator.process
     rescue => e
-      Rails.logger.error("\n\n== YOUTRACK API FAILURE \n#{rwusboy}\n#{e}\n\n")
+      Rails.logger.error("\n\n== YOUTRACK API FAILURE \n#{youtrack_recreator}\n#{e}\n\n")
       # TODO we should notify erbit
     end
   end
 
-  def rwusboy
-    @rwusboy ||=
+  def youtrack_recreator
+    @youtrack_recreator ||=
         Youtrack::RecreateWorkUnitStructure.new(project, context_code)
   end
 
@@ -58,10 +58,10 @@ class Work::TimeEntryContext < Struct.new(:context_code)
 
   module Youtrack
     class RecreateWorkUnitStructure < Struct.new(:project, :context_code)
-      delegate :process, to: :rbowuc
+      delegate :process, to: :creator
 
-      def rbowuc
-        @rbowuc ||=
+      def creator
+        @creator ||=
             Work::UnitStructureImport::RecreateBasedOnWorkUnitContext.new(active_phase, work_unit_contexts)
       end
 
