@@ -31,18 +31,9 @@ class Work::TimeEntryContext < Struct.new(:context_code)
 
   def detect_unit
     if project.is_connected_with_youtrack?
-      recreate_work_unit_structure_based_on_youtrack
+      youtrack_recreator.recreate
     end
     descendants.where(wuid: unit_uid).first || phase.children.create(wuid: unit_uid)
-  end
-
-  def recreate_work_unit_structure_based_on_youtrack
-    begin
-      youtrack_recreator.process
-    rescue => e
-      Rails.logger.error("\n\n== YOUTRACK API FAILURE \n#{youtrack_recreator}\n#{e}\n\n")
-      # TODO we should notify erbit
-    end
   end
 
   def youtrack_recreator
@@ -58,7 +49,12 @@ class Work::TimeEntryContext < Struct.new(:context_code)
 
   module Youtrack
     class RecreateWorkUnitStructure < Struct.new(:project, :context_code)
-      delegate :process, to: :creator
+      def recreate
+        creator.process
+      rescue => e
+        Rails.logger.error("\n\n== YOUTRACK API FAILURE \n#{self}\n#{e}\n\n")
+        # TODO we should notify erbit
+      end
 
       def creator
         @creator ||=
