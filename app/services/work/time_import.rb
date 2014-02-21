@@ -25,7 +25,7 @@ class Work::TimeImport < Struct.new(:coworker, :time_entries_data)
   end
 
   def collect_time_entries_errors
-    errors.push(*invalid_time_entries)
+    @errors += invalid_time_entries
   end
 
   def invalid_time_entries
