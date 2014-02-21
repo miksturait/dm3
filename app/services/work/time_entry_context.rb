@@ -31,55 +31,15 @@ class Work::TimeEntryContext < Struct.new(:context_code)
   end
 
   def detect_unit
-    if project.is_connected_with_youtrack?
-      youtrack_recreator.recreate
-    end
+    work_unit_recreator.recreate
     descendants.where(wuid: unit_uid).first || phase.children.create(wuid: unit_uid)
   end
 
-  def youtrack_recreator
-    @youtrack_recreator ||=
-        Youtrack::RecreateWorkUnitStructure.new(project, context_code)
+  def work_unit_recreator
+    project.work_unit_recreator_class.new(project, context_code)
   end
 
   def context
     @context ||= Work::ContextFromTextCode.new(context_code)
-  end
-
-  module Youtrack
-    class RecreateWorkUnitStructure < Struct.new(:project, :context_code)
-      delegate :active_phase, to: :project
-      delegate :work_unit_contexts, to: :issue
-
-      def recreate
-        creator.process
-      rescue => e
-        Rails.logger.error("\n\n== YOUTRACK API FAILURE \n#{self}\n#{e}\n\n")
-        # TODO we should notify erbit
-      end
-
-      def creator
-        @creator ||=
-            Work::UnitStructureImport::RecreateBasedOnWorkUnitContext.new(active_phase, work_unit_contexts)
-      end
-
-      def issue
-        @issue ||=
-            Work::UnitStructureImport::YouTrackIssue.new(youtrack, context_code)
-      end
-
-      def youtrack
-        @youtrack ||=
-            Work::UnitStructureImport::YouTrackConnection.new(youtrack_config.attrs)
-      end
-
-      def youtrack_config
-        Work::UnitStructureImport::YouTrackConfig.new(youtrack_config_code)
-      end
-
-      def youtrack_config_code
-        project.opts['youtrack']
-      end
-    end
   end
 end

@@ -27,6 +27,14 @@ class Project < Work::Unit
     name
   end
 
+  def work_unit_recreator_class
+    if opts && opts.has_key?('youtrack')
+      Youtrack::WorkUnitRecreator
+    else
+      NullServices::WorkUnitRecreator
+    end
+  end
+
   private
 
   def detect_active_phase
