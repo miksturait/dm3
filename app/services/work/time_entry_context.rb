@@ -30,17 +30,19 @@ class Work::TimeEntryContext < Struct.new(:context_code)
   delegate :descendants, to: :phase
 
   def detect_unit
-    try_to_recreate_work_unit_structure_based_on_youtrack
+    if project.is_connected_with_youtrack?
+      recreate_work_unit_structure_based_on_youtrack
+    end
     descendants.where(wuid: unit_uid).first || phase.children.create(wuid: unit_uid)
   end
 
-  def try_to_recreate_work_unit_structure_based_on_youtrack
+  def recreate_work_unit_structure_based_on_youtrack
     begin
       rwusboy.process
     rescue => e
       Rails.logger.error("\n\n== YOUTRACK API FAILURE \n#{rwusboy}\n#{e}\n\n")
       # TODO we should notify erbit
-    end if project.is_connected_with_youtrack?
+    end
   end
 
   def rwusboy
