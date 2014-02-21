@@ -1,37 +1,4 @@
 module Dm2
-  class Base < ActiveRecord::Base
-    config = {
-        adapter: 'mysql',
-        host: 'localhost',
-        database: 'dm2',
-        username: 'root',
-        password: ''
-    }
-    self.abstract_class = true
-    establish_connection config
-  end
-  class Project < Base
-    has_many :children, class_name: self, foreign_key: :parent_id
-
-    def descendants
-      self.class.where(["lft >= ? AND rgt <= ?", lft, rgt])
-    end
-
-    def time_entries
-      Dm2::TimeEntry.where("project_id IN (#{descendants.select(:id).to_sql})")
-    end
-
-    scope :roots, -> { where(parent_id: nil) }
-  end
-  class TimeEntry < Base
-  end
-
-  class User < Base
-    def name
-      [firstname, lastname].join(' ')
-    end
-  end
-
   class Support
     include Singleton
 
@@ -45,7 +12,7 @@ module Dm2
       end
 
       def rebuild_work_unit_structure_and_worklog_hours(customer, child)
-        project = create_project_for_customer(customer, child)
+        project                = create_project_for_customer(customer, child)
         time_entries_to_import = child.time_entries.group(:user_id, :spent_on).count
         puts "\n\n #{project.name} \n => #{time_entries_to_import} - "
         child.time_entries.group(:user_id, :spent_on).sum(:hours).each do |key, workload|
@@ -60,8 +27,8 @@ module Dm2
 
       def calculate_period_base_on_date_and_workload(coworker, date, workload)
         workload_in_minutes = (workload * 60.0).ceil
-        range = date.to_datetime..date.to_datetime+23.hours+59.minutes+59.seconds
-        start_at = detect_start_at_for_coworker_and_range(coworker, range)
+        range               = date.to_datetime..date.to_datetime+23.hours+59.minutes+59.seconds
+        start_at            = detect_start_at_for_coworker_and_range(coworker, range)
         start_at..start_at+workload_in_minutes.minutes
       end
 
