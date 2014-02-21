@@ -17,6 +17,7 @@ class Work::TimeEntryContext < Struct.new(:context_code)
 
   delegate :descendants, to: :phase
   delegate :project_wuid, :unit_uid, to: :context
+  delegate :work_unit_recreator_class, to: :project
 
   def phase
     @phase ||= project.active_phase
@@ -36,7 +37,7 @@ class Work::TimeEntryContext < Struct.new(:context_code)
   end
 
   def work_unit_recreator
-    project.work_unit_recreator_class.new(project, context_code)
+    work_unit_recreator_class.new(project, context_code)
   end
 
   def context
