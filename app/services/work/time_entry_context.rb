@@ -47,7 +47,7 @@ class Work::TimeEntryContext < Struct.new(:context_code)
 
   def rwusboy
     @rwusboy ||=
-        RecreateWorkUnitStructureBasedOnYoutrack.new(project, context_code)
+        Youtrack::RecreateWorkUnitStructure.new(project, context_code)
   end
 
   delegate :project_wuid, :unit_uid, :nofollow, to: :context
@@ -56,33 +56,35 @@ class Work::TimeEntryContext < Struct.new(:context_code)
     @context ||= Work::ContextFromTextCode.new(context_code)
   end
 
-  class RecreateWorkUnitStructureBasedOnYoutrack < Struct.new(:project, :context_code)
-    delegate :process, to: :rbowuc
+  module Youtrack
+    class RecreateWorkUnitStructure < Struct.new(:project, :context_code)
+      delegate :process, to: :rbowuc
 
-    def rbowuc
-      @rbowuc ||=
-          Work::UnitStructureImport::RecreateBasedOnWorkUnitContext.new(active_phase, work_unit_contexts)
-    end
+      def rbowuc
+        @rbowuc ||=
+            Work::UnitStructureImport::RecreateBasedOnWorkUnitContext.new(active_phase, work_unit_contexts)
+      end
 
-    delegate :active_phase, to: :project
-    delegate :work_unit_contexts, to: :issue
+      delegate :active_phase, to: :project
+      delegate :work_unit_contexts, to: :issue
 
-    def issue
-      @issue ||=
-          Work::UnitStructureImport::YouTrackIssue.new(youtrack, context_code)
-    end
+      def issue
+        @issue ||=
+            Work::UnitStructureImport::YouTrackIssue.new(youtrack, context_code)
+      end
 
-    def youtrack
-      @youtrack ||=
-          Work::UnitStructureImport::YouTrackConnection.new(youtrack_config.attrs)
-    end
+      def youtrack
+        @youtrack ||=
+            Work::UnitStructureImport::YouTrackConnection.new(youtrack_config.attrs)
+      end
 
-    def youtrack_config
-      Work::UnitStructureImport::YouTrackConfig.new(youtrack_config_code)
-    end
+      def youtrack_config
+        Work::UnitStructureImport::YouTrackConfig.new(youtrack_config_code)
+      end
 
-    def youtrack_config_code
-      project.opts["youtrack"]
+      def youtrack_config_code
+        project.opts["youtrack"]
+      end
     end
   end
 end
