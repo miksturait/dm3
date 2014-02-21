@@ -5,7 +5,7 @@ class Work::TimeEntryContext < Struct.new(:context_code)
       detect_unit || phase
     rescue ActiveRecord::RecordNotFound => e
       @exception = {work_unit_id: [e]}
-      return(nil)
+      return
     end
   end
 
