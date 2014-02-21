@@ -38,12 +38,8 @@ class Work::TimeImport < Struct.new(:coworker, :time_entries_data)
 
   def import_time_entries
     @time_entries = time_entries_attrs.collect do |time_entry_attrs|
-      create_time_entry(time_entry_attrs)
+      coworker.time_entries.create(time_entry_attrs)
     end
-  end
-
-  def create_time_entry(attrs)
-    coworker.time_entries.create(attrs)
   end
 
   def time_entries_attrs
