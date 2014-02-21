@@ -1,6 +1,6 @@
 class Work::ContextFromTextCode < Struct.new(:context_code)
   def project_wuid
-    match_project_wuid
+    match[:project].try(:downcase)
   end
 
   def unit_uid
@@ -12,12 +12,6 @@ class Work::ContextFromTextCode < Struct.new(:context_code)
   end
 
   private
-
-  def match_project_wuid
-    if match[:project]
-      match[:project].downcase
-    end
-  end
 
   def match
     context_regex.match(context_code)
