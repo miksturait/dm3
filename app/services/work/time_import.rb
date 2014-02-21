@@ -33,7 +33,7 @@ class Work::TimeImport < Struct.new(:coworker, :time_entries_data)
   end
 
   def clear_errors
-    self.errors = []
+    @errors = []
   end
 
   def import_time_entries
