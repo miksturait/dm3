@@ -16,3 +16,4 @@ ROLES: [admin, user, VIP]
 YOUTRACK_URL: https://youtrack.mikstura.it
 YOUTRACK_LOGIN: user
 YOUTRACK_PASSWD: passwd
+DM2_AUTH_TOKEN: 12345
