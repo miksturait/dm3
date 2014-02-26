@@ -1,13 +1,13 @@
 class Work::UserStatistics < Struct.new(:params)
   def self.last_month_summary
-    period = Work::UserStatistics.new.send(:period_helper)
+    period = Work::UserStatistics.new.send(:current_period)
 
     results = Coworker.all.collect do |coworker|
-      time = coworker.time_entries.within_period(period.last_month).sum(:duration)
-      hours = time / 60
+      time    = coworker.time_entries.within_period(period.last_month).sum(:duration)
+      hours   = time / 60
       minutes = time % 60
       unless time == 0
-        [coworker.name.ljust(30, ' '), "#{hours}:#{minutes.to_s.rjust(2,'0')}".rjust(8, ' '), sprintf("%0.02f", (time/60.0).round(2)).rjust(8, ' ')]
+        [coworker.name.ljust(30, ' '), "#{hours}:#{minutes.to_s.rjust(2, '0')}".rjust(8, ' '), sprintf("%0.02f", (time/60.0).round(2)).rjust(8, ' ')]
       end
     end.compact
 
@@ -17,7 +17,7 @@ class Work::UserStatistics < Struct.new(:params)
   def summary
     {
         personal: personal_stats_as_hash,
-        team: team_stats_as_hash
+        team:     team_stats_as_hash
     }
   end
 
@@ -31,13 +31,13 @@ class Work::UserStatistics < Struct.new(:params)
 
   def personal_stats
     @personal_stats ||=
-        period_helper.all.each_with_object({}) do |(name, period), cache|
+        current_period.all.each_with_object({}) do |(name, period), cache|
           cache[name] = PersonalStats.new(period, coworker)
         end
   end
 
   def team_stats_as_hash
-    period_helper.all.each_with_object({}) do |(name, period), cache|
+    current_period.all.each_with_object({}) do |(name, period), cache|
       cache[name] = TeamStats.new(period, personal_stats[name].projects).to_hash
     end
   end
@@ -46,8 +46,8 @@ class Work::UserStatistics < Struct.new(:params)
     def to_hash
       {
           total: {
-              worked: worked_hours.total,
-              target: target_hours.total,
+              worked:    worked_hours.total,
+              target:    target_hours.total,
               available: available_hours.working_hours
           }
       }.merge(all_projects_to_hash)
@@ -102,45 +102,41 @@ class Work::UserStatistics < Struct.new(:params)
 
   class HoursWorkedGroupByProject < Struct.new(:period, :coworker)
     def total
-      per_project_stats.values.sum
+      time_per_project.values.sum
     end
 
     def [](project)
-      per_project_stats[project] || 0
+      time_per_project[project] || 0
     end
 
     def projects
       @projects ||=
-          per_project_stats.keys
+          time_per_project.keys
     end
 
     private
 
-    def per_project_stats
-      @per_project_stats ||=
-          time_per_project
-    end
+    delegate :time_entries, to: :coworker
 
     def time_per_project
+      @time_per_project ||=
+          calculate_time_per_project
+    end
+
+    def calculate_time_per_project
       time_per_work_unit.each_with_object(Hash.new { |h, k| h[k] = 0 }) do |(work_unit_id, duration), cache|
-        find_project_based_on_descendant_id(work_unit_id).tap do |project|
-          begin
-            cache[project] += duration
-          rescue => e
-            binding.pry
-          end
+        find_project(work_unit_id).tap do |project|
+          cache[project] += duration
         end
       end
     end
 
     def time_per_work_unit
-      coworker.time_entries.within_period(period).group(:work_unit_id).sum(:duration)
+      time_entries.within_period(period).group(:work_unit_id).sum(:duration)
     end
 
-    def find_project_based_on_descendant_id(work_unit_id)
-      Project.where("id IN (#{Work::Unit.where(id: work_unit_id).
-          select("UNNEST(REGEXP_SPLIT_TO_ARRAY(ancestry, '/')::integer[]) as id").to_sql}) OR id = #{work_unit_id}").
-          first
+    def find_project(work_unit_id)
+      Project.related_to_descendant_id(work_unit_id).first
     end
   end
 
@@ -191,14 +187,14 @@ class Work::UserStatistics < Struct.new(:params)
     params[:coworker_email]
   end
 
-  def period_helper
+  def current_period
     @period_helper ||= Period.new(Date.today)
   end
 
   class Period < Struct.new(:today)
     def all
       {
-          this_week: this_week,
+          this_week:  this_week,
           this_month: this_month,
           last_month: last_month
       }
@@ -209,7 +205,7 @@ class Work::UserStatistics < Struct.new(:params)
     end
 
     def this_week
-      week(today)
+      today.beginning_of_week..today.end_of_week.end_of_day
     end
 
     def last_month
@@ -220,10 +216,6 @@ class Work::UserStatistics < Struct.new(:params)
 
     def month(date)
       date.beginning_of_month..date.end_of_month.end_of_day
-    end
-
-    def week(date)
-      date.beginning_of_week..date.end_of_week.end_of_day
     end
 
     def last_day_of_previous_month

@@ -4,25 +4,38 @@ class Project < Work::Unit
 
   validates :wuid,
             presence: true,
-            format: {
-                with: /\A[a-z\_\.0-9]+\z/,
-                message: "only small letters and underscores allowed",
+            format:   {
+                with:      /\A[a-z\_\.0-9]+\z/,
+                message:   'only small letters and underscores allowed',
                 allow_nil: true
             }
 
-  def active_phase
-    detect_active_phase || create_children
+  def self.related_to_descendant_id(id)
+    descendant_ids_query = Work::Unit.descendant_ids(id).to_sql
+    where("id IN (#{descendant_ids_query}) OR id = #{id}")
   end
 
-  def is_connected_with_youtrack?
-    opts && opts.has_key?("youtrack")
+  def active_phase
+    detect_active_phase || create_children
   end
 
   def label
     name
   end
 
+  def work_unit_recreator_class
+    if is_connected_with_youtrack?
+      Youtrack::WorkUnitRecreator
+    else
+      NullServices::WorkUnitRecreator
+    end
+  end
+
   private
+
+  def is_connected_with_youtrack?
+    opts && opts.has_key?('youtrack')
+  end
 
   def detect_active_phase
     children_class.where(ancestry: child_ancestry).active.last

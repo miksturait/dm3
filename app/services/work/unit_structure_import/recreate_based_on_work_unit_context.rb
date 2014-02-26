@@ -4,13 +4,11 @@ class Work::UnitStructureImport::RecreateBasedOnWorkUnitContext < Struct.new(:ph
   end
 
   def find_or_create_child(parent, work_unit_context)
-    return nil if work_unit_context.nil?
+    return if work_unit_context.nil?
     parent.children.where(
         wuid: work_unit_context.wuid,
-        name: work_unit_context.name).
-
-        first_or_create.
-
+        name: work_unit_context.name
+    ).first_or_create.
         tap { |potential_parent| find_or_create_child(potential_parent, next_child_work_unit_context) }
   end
 

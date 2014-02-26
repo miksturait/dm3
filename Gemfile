@@ -49,6 +49,8 @@ group :development do
 end
 
 group :development, :test do
+  gem 'pry'
+  gem 'pry-debugger'
   gem 'factory_girl_rails'
   gem 'rspec-rails'
   gem 'capistrano'

@@ -25,25 +25,21 @@ class Work::TimeImport < Struct.new(:coworker, :time_entries_data)
   end
 
   def collect_time_entries_errors
-    errors.push(*invalid_time_entries)
+    @errors += invalid_time_entries
   end
 
   def invalid_time_entries
-    time_entries.select { |time_entry| time_entry.errors.present? }
+    time_entries.select(&:invalid?)
   end
 
   def clear_errors
-    self.errors = []
+    @errors = []
   end
 
   def import_time_entries
     @time_entries = time_entries_attrs.collect do |time_entry_attrs|
-      create_time_entry(time_entry_attrs)
+      coworker.time_entries.create(time_entry_attrs)
     end
-  end
-
-  def create_time_entry(attrs)
-    coworker.time_entries.create(attrs)
   end
 
   def time_entries_attrs

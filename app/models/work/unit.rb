@@ -2,7 +2,7 @@ class Work::Unit < ActiveRecord::Base
   self.table_name = 'work_units'
   has_ancestry cache_depth: true
   has_many :time_entries, class_name: Work::TimeEntry
-  has_many :coworker_tergets, class_name: Work::CoworkerTarget
+  has_many :coworker_targets, class_name: Work::CoworkerTarget
 
   validates :wuid, presence: true, if: Proc.new { |work_unit| work_unit.type.blank? }
   validates :wuid,
@@ -12,11 +12,13 @@ class Work::Unit < ActiveRecord::Base
             }
 
   scope :skip_archived, -> { where("opts @> hstore('archived', 'false')") }
+  scope :descendant_ids, ->(id) do
+    where(id: id).select("UNNEST(REGEXP_SPLIT_TO_ARRAY(ancestry, '/')::integer[]) as id")
+  end
 
   delegate :begin, :end,
            to: :period,
            prefix: true, allow_nil: true
-
 
   def time_entries
     Work::TimeEntry.where(work_unit_id: subtree_ids)

@@ -18,3 +18,10 @@ YOUTRACK_LOGIN: user
 YOUTRACK_PASSWD: passwd
 ERRBIT_API_KEY: some_key
 ERRBIT_HOST: some_host
+DM2_DATABASE_CONFIG: {
+  adapter:  'mysql',
+  host:     'localhost',
+  database: 'dm2',
+  username: 'root',
+  password: ''
+}
