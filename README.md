@@ -47,6 +47,13 @@ rake db:setup
 
 #### Other
 
+Selectively exporting TimeEntries to JIRA
+
+```ruby
+export = Jira::Export.last
+coworker = export.time_entry.coworker
+Jira::TimeEntriesExportBatch.new(coworker, [export]).perform
+```
 
 ## Contact information
 
