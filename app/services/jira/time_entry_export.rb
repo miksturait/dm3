@@ -35,10 +35,23 @@ module Jira
 
     def save_worklog!
       if Rails.env.production?
-        worklog_object.save({'timeSpentSeconds' => seconds_spent.to_s})
+        worklog_object.save({'timeSpentSeconds' => seconds_spent.to_s,
+                             'started' => "#{date_as_text}T#{time_as_text}.000+0000"})
       else
         true
       end
+    end
+
+    def date_as_text
+      time.strftime('%Y-%m-%d')
+    end
+
+    def time_as_text
+      time.strftime('%H:%M:%S')
+    end
+
+    def time
+      jira_export_object.time_entry.period.begin
     end
 
     def jira_client_username
