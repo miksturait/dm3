@@ -1,6 +1,11 @@
 module Jira
   class TimeEntryExport
     VALID_WUID_REGEX = /\Ajira::spd-\d+\z/
+    ISSUE_MAP = {
+        'manage' => 'SPD-565',
+        'communication' => 'SPD-566',
+        'qa' => 'SPD-567',
+    }
 
     attr_reader :jira_client, :jira_export_object
 
@@ -29,7 +34,11 @@ module Jira
     private
 
     def save_worklog!
-      worklog_object.save({'timeSpentSeconds' => seconds_spent.to_s})
+      if Rails.env.production?
+        worklog_object.save({'timeSpentSeconds' => seconds_spent.to_s})
+      else
+        true
+      end
     end
 
     def jira_client_username
@@ -62,7 +71,7 @@ module Jira
       if work_unit_id =~ VALID_WUID_REGEX
         work_unit_id.split('::').last.upcase
       else
-        nil
+        ISSUE_MAP[work_unit_id]
       end
     end
 
