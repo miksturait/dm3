@@ -261,6 +261,39 @@ ALTER SEQUENCE days_off_periods_id_seq OWNED BY days_off_periods.id;
 
 
 --
+-- Name: jira_exports; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE jira_exports (
+    id integer NOT NULL,
+    time_entry_id integer,
+    processed_at timestamp without time zone,
+    last_error text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: jira_exports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE jira_exports_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: jira_exports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE jira_exports_id_seq OWNED BY jira_exports.id;
+
+
+--
 -- Name: roles; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -462,6 +495,13 @@ ALTER TABLE ONLY days_off_periods ALTER COLUMN id SET DEFAULT nextval('days_off_
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY jira_exports ALTER COLUMN id SET DEFAULT nextval('jira_exports_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regclass);
 
 
@@ -532,6 +572,14 @@ ALTER TABLE ONLY daily_coworker_targets
 
 ALTER TABLE ONLY days_off_periods
     ADD CONSTRAINT days_off_periods_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: jira_exports_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY jira_exports
+    ADD CONSTRAINT jira_exports_pkey PRIMARY KEY (id);
 
 
 --
@@ -695,3 +743,5 @@ INSERT INTO schema_migrations (version) VALUES ('20131228135340');
 INSERT INTO schema_migrations (version) VALUES ('20140103090005');
 
 INSERT INTO schema_migrations (version) VALUES ('20140103193026');
+
+INSERT INTO schema_migrations (version) VALUES ('20140227134512');

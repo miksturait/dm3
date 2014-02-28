@@ -21,16 +21,16 @@ gem 'ancestry'
 gem 'time_diff'
 gem 'youtrack_api', git: 'https://github.com/eisnerd/youtrack-rest-ruby-library.git'
 gem 'httparty'
-gem "active_model_serializers"
-gem "select2-rails"
+gem 'active_model_serializers'
+gem 'select2-rails'
 
 gem 'activeadmin', github: 'gregbell/active_admin'
-gem "activeadmin-sortable-tree", github: "nebirhos/activeadmin-sortable-tree"
-gem "airbrake"
+gem 'activeadmin-sortable-tree', github: 'nebirhos/activeadmin-sortable-tree'
+gem 'airbrake'
+gem 'jira-ruby', require: 'jira'
 
 group :production do
   gem 'passenger'
-  gem 'mysql'
 end
 
 group :development do
@@ -45,7 +45,6 @@ group :development do
   gem 'rb-fchange', require: false
   gem 'rb-fsevent', require: false
   gem 'rb-inotify', require: false
-  gem 'mysql'
 end
 
 group :development, :test do
