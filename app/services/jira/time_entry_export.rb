@@ -35,11 +35,39 @@ module Jira
 
     def save_worklog!
       if Rails.env.production?
-        worklog_object.save({'timeSpentSeconds' => seconds_spent.to_s,
-                             'started' => "#{date_as_text}T#{time_as_text}.000+0000"})
+        on_opened_issue do
+          worklog_object.save({'timeSpentSeconds' => seconds_spent.to_s,
+                               'started' => "#{date_as_text}T#{time_as_text}.000+0000"})
+        end
       else
         true
       end
+    end
+
+    def on_opened_issue
+      if issue_closed?
+        open_issue!
+        yield
+        close_issue!
+      else
+        yield
+      end
+    end
+
+    def open_issue!
+      apply_transition(3)
+    end
+
+    def close_issue!
+      apply_transition(2)
+    end
+
+    def apply_transition(transition_id)
+      jira_issue.transitions.build.save({'transition' => {'id' => transition_id.to_s}})
+    end
+
+    def issue_closed?
+      jira_issue.status.name == 'Closed'
     end
 
     def date_as_text
@@ -68,7 +96,7 @@ module Jira
     end
 
     def jira_issue
-      begin
+     @jira_issue ||= begin
         jira_client.Issue.find(issue_identifier)
       rescue JIRA::HTTPError
         save_error("Cannot find issue #{issue_identifier}")
