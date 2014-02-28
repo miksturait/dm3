@@ -1,4 +1,4 @@
-load 'dm2_import/base.rb'
+# load 'dm2_import/base.rb'
 class DM2Import::Process
   def self.run
     benchmark = Benchmark.measure do
