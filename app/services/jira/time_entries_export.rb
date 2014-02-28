@@ -2,11 +2,12 @@
 
 module Jira
   PROJECT_WUID = 'sourcyx'.freeze
+  EXPORT_SINCE = Date.parse('01/01/2014')
 
   class TimeEntriesExport
-    def perform
+    def perform(process: true)
       create_missing_jira_export_objects
-      process_pending_jira_export_object
+      process_pending_jira_export_object if process
     end
 
     private
@@ -24,7 +25,8 @@ module Jira
     def project_time_entries_without_jira_export_objects
       work_unit.time_entries.
           joins('LEFT OUTER JOIN jira_exports ON jira_exports.time_entry_id = time_entries.id').
-          where('jira_exports.id' => nil)
+          where('jira_exports.id' => nil).
+          where(["time_entries.period && tstzrange(?,?, '[]')", EXPORT_SINCE.to_s(:db), (Date.today + 1.day).to_s(:db)])
     end
 
     def pending_jira_export_objects
