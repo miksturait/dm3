@@ -6,6 +6,7 @@ module Jira
         'wojtek.ryrych@gmail.com' => 'wojtek.ryrych@gmail.com',
         'arek.mp@gmail.com' => 'arek.mp@gmail.com',
     }
+    FALLBACK_USERNAME = 't.borowski@selleo.com'
 
     attr_reader :jira_export_objects, :coworker
 
@@ -37,7 +38,7 @@ module Jira
     end
 
     def username
-      USERS_MAP[coworker.email]
+      USERS_MAP[coworker.email] || FALLBACK_USERNAME
     end
 
     def password
