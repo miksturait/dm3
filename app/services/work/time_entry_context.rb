@@ -31,8 +31,7 @@ class Work::TimeEntryContext < Struct.new(:context_code)
 
   def detect_unit
     work_unit_recreator.recreate
-    work_unit_recreator.leaf ||
-        descendants.where(wuid: unit_uid).first ||
+    descendants.where(wuid: unit_uid).first ||
         phase.children.create(wuid: unit_uid)
   end
 
