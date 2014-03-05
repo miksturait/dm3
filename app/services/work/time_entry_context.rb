@@ -30,7 +30,6 @@ class Work::TimeEntryContext < Struct.new(:context_code)
   end
 
   def detect_unit
-    binding.pry
     work_unit_recreator.recreate
     work_unit_recreator.leaf ||
         descendants.where(wuid: unit_uid).first ||

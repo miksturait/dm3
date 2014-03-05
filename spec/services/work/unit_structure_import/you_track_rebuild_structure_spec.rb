@@ -2,10 +2,10 @@ require 'spec_helper'
 
 describe Work::UnitStructureImport::YouTrackRebuildStructure do
 
-  let(:phase) { create(:phase) }
-  let(:other_phase) { create(:phase) }
+  let(:project) { create(:project, opts: {youtrack: 'ccc'}, wuid: 'ccc') }
+  let(:phase) { create(:phase, parent: project) }
+  let(:other_phase) { create(:phase, parent: project) }
   let(:some_work_unit) { other_phase.create_children(wuid: '4533') }
-  # TODO refactor without using create_context_class & build_context
   let(:sprint) { build_context("2-8 Dec '13", nil) }
   let(:child) { build_context("979", "knowledge pack I") }
   let(:a_good_child) { build_context("1040", "good piece of work") }
@@ -32,10 +32,13 @@ describe Work::UnitStructureImport::YouTrackRebuildStructure do
     end
   end
 
+  # input: work_unit / period
   let(:youtrack_rebuild_structure) { described_class.new(phase, period) }
 
-  describe "#work_units", :focus do
-    let(:work_units_map) { youtrack_rebuild_structure.work_units_map }
+  # find all work_units for time entries in that period
+  # keep work_unit_id => time_entries_ids
+  describe "#work_units" do
+    let(:work_units_map) { youtrack_rebuild_structure.send(:work_units_map) }
 
     it { expect(work_units_map).
         to eq({
@@ -43,23 +46,41 @@ describe Work::UnitStructureImport::YouTrackRebuildStructure do
                   a_good_child_work_unit => a_good_child_work_unit.time_entries.within_period(period).pluck(:id)
               })
     }
-
   end
-  # work_unit_id / data_period
 
-  # find all work_units for time entries in that period
-  # keep work_unit_id => time_entries_ids
+  let(:root) { build_context("1242", "HRM ( recruitment / skills development & dessimination )") }
+  let(:group) { build_context("980", "Troubleshooting, The Developer's #1 Skill") }
+  let(:updated_child) { sprint.children.create("979", "some new name") }
 
   context "different ancestors structure and different name of ticket" do
-    let(:root) { build_context("1242", "HRM ( recruitment / skills development & dessimination )") }
-    let(:group) { build_context("980", "Troubleshooting, The Developer's #1 Skill") }
-    let(:child) { sprint.children.create("979", "some new name") }
-    let(:new_context) { [sprint, root, group, child] }
+    before do
+      double_work_unit_context = double('Work::UnitContext')
+      double_work_unit_context.stub(:work_unit_contexts).and_return([sprint, root, group, child])
+      double_a_good_work_unit_context = double('Work::UnitContext')
+      double_a_good_work_unit_context.stub(:work_unit_contexts).and_return([sprint, a_good_child])
+
+      @@youtrack_work_unit_recreator_issue = [double_a_good_work_unit_context,
+                                              double_work_unit_context]
+
+      Youtrack::WorkUnitRecreator.any_instance.stub(:issue) do
+        @@youtrack_work_unit_recreator_issue.pop
+      end
+    end
+
+    let(:process) { youtrack_rebuild_structure.process }
+
+    it { expect { process }.to change { Work::Unit.count }.to(10) }
+    it { expect { process }.to change { phase.descendants.count }.from(3).to(6) }
+    it { expect { process }.to change { child_work_unit.time_entries.sum(:duration) }.from(155).to(15) }
 
 
-    # for each work unit
-    #   * recreate work_unit_structure
-    #   * if work unit is brand new update time_entries
+    context "after rebuild" do
+      before { process }
+      let(:new_work_unit) { phase.descendants.order(id: :desc).where(wuid: '979').first }
+      let(:ancestors_wuids) { new_work_unit.ancestors.pluck(:wuid)}
+
+      it { expect(ancestors_wuids).to eq(["ccc", nil, "2-8 Dec '13", "1242", "980"]) }
+    end
   end
 
   def build_context(wuid, name)
