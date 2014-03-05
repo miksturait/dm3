@@ -3,7 +3,9 @@ class Work::UnitStructureImport::YouTrackRebuildStructure < Struct.new(:phase, :
   def process
     ActiveRecord::Base.transaction do
       work_units_map.each do |work_unit, time_entry_ids|
-        RebuildTreeForWorkUnit.new(phase, work_unit, time_entry_ids).process
+        if /^\d+$/.match(work_unit.wuid)
+          RebuildTreeForWorkUnit.new(phase, work_unit, time_entry_ids).process
+        end
       end
     end
   end
@@ -37,7 +39,11 @@ class Work::UnitStructureImport::YouTrackRebuildStructure < Struct.new(:phase, :
 
     def work_unit_recreator
       @work_unit_recreator ||=
-          work_unit_recreator_class.new(phase, wuid)
+          work_unit_recreator_class.new(phase, youtrack_issue_id)
+    end
+
+    def youtrack_issue_id
+      [project.wuid, wuid].join('-')
     end
 
     def project
@@ -61,9 +67,10 @@ class Work::UnitStructureImport::YouTrackRebuildStructure < Struct.new(:phase, :
     end
   end
 
-  # TODO - this should be moved to within_period scope responsibility
+# TODO - this should be moved to within_period scope responsibility
   def period_as_time
     period.begin.in_time_zone..
         period.end.in_time_zone.end_of_day
   end
+
 end
