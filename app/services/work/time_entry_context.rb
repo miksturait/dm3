@@ -30,12 +30,16 @@ class Work::TimeEntryContext < Struct.new(:context_code)
   end
 
   def detect_unit
+    binding.pry
     work_unit_recreator.recreate
-    descendants.where(wuid: unit_uid).first || phase.children.create(wuid: unit_uid)
+    work_unit_recreator.leaf ||
+        descendants.where(wuid: unit_uid).first ||
+        phase.children.create(wuid: unit_uid)
   end
 
   def work_unit_recreator
-    work_unit_recreator_class.new(project, context_code)
+    @work_unit_recreator_class ||=
+        work_unit_recreator_class.new(project, context_code)
   end
 
   def context

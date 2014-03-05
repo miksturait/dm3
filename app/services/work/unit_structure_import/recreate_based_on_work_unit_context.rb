@@ -1,4 +1,6 @@
 class Work::UnitStructureImport::RecreateBasedOnWorkUnitContext < Struct.new(:phase, :work_units_context)
+  attr_accessor :leaf
+
   def process
     find_or_create_child(phase, next_child_work_unit_context)
   end
@@ -9,7 +11,10 @@ class Work::UnitStructureImport::RecreateBasedOnWorkUnitContext < Struct.new(:ph
         wuid: work_unit_context.wuid,
         name: work_unit_context.name
     ).first_or_create.
-        tap { |potential_parent| find_or_create_child(potential_parent, next_child_work_unit_context) }
+        tap do |potential_parent|
+      self.leaf = potential_parent
+      find_or_create_child(potential_parent, next_child_work_unit_context)
+    end
   end
 
   private

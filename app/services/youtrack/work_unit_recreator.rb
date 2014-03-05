@@ -2,6 +2,7 @@ module Youtrack
   class WorkUnitRecreator < Struct.new(:project, :context_code)
     delegate :active_phase, to: :project
     delegate :work_unit_contexts, to: :issue
+    delegate :leaf, to: :creator, allow_nil: true
 
     def recreate
       creator.process
