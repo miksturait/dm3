@@ -32,21 +32,7 @@ describe Work::UnitStructureImport::YouTrackRebuildStructure do
     end
   end
 
-  # input: work_unit / period
   let(:youtrack_rebuild_structure) { described_class.new(phase, period) }
-
-  # find all work_units for time entries in that period
-  # keep work_unit_id => time_entries_ids
-  describe "#work_units" do
-    let(:work_units_map) { youtrack_rebuild_structure.send(:work_units_map) }
-
-    it { expect(work_units_map).
-        to eq({
-                  child_work_unit => child_work_unit.time_entries.within_period(period).pluck(:id),
-                  a_good_child_work_unit => a_good_child_work_unit.time_entries.within_period(period).pluck(:id)
-              })
-    }
-  end
 
   let(:root) { build_context("1242", "HRM ( recruitment / skills development & dessimination )") }
   let(:group) { build_context("980", "Troubleshooting, The Developer's #1 Skill") }
