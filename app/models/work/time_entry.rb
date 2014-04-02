@@ -16,6 +16,8 @@ class Work::TimeEntry < ActiveRecord::Base
   scope :overlapping_with, ->(range) { where(["period && tstzrange(?,?, '()')", range.begin.to_s, range.end.to_s]) }
   scope :within_period, ->(range) { where(["period && tstzrange(?,?, '[]')", range.begin.to_s, range.end.to_s]) }
   scope :work_unit_id_eq, ->(work_unit_id) { where(work_unit_id: Work::Unit.find(work_unit_id).subtree) }
+  scope :after_start_time, ->(start_time) { where("period <@ tstzrange(?, 'Infinity', '[]')", start_time.to_s) }
+  scope :before_start_time, ->(start_time) { where("lower(period) <@ tstzrange('-Infinity', ?, '[]')", start_time.to_s) }
 
   def work_unit_id_eq(work_unit_id)
     throw 'aaa'
@@ -32,9 +34,18 @@ class Work::TimeEntry < ActiveRecord::Base
   delegate :begin, :end,
            to: :period,
            prefix: true, allow_nil: true
+  delegate :name, to: :coworker, prefix: true, allow_nil: true
 
   def label
     work_unit_ancestors_without_client_customer.map(&:label).join(" > ")
+  end
+
+  def start_time
+    period.begin
+  end
+
+  def end_time
+    period.end
   end
 
   private
