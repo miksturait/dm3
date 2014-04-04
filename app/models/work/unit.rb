@@ -15,6 +15,7 @@ class Work::Unit < ActiveRecord::Base
   scope :descendant_ids, ->(id) do
     where(id: id).select("UNNEST(REGEXP_SPLIT_TO_ARRAY(ancestry, '/')::integer[]) as id")
   end
+  scope :less_or_equal_depth, ->(depth) { where('ancestry_depth <= ?', depth) }
 
   delegate :begin, :end,
            to: :period,
