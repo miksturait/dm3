@@ -362,10 +362,6 @@ describe Api::WorkUnitsController do
           }
         end
       end
-
-      context 'grouping' do
-        pending 'TODO'
-      end
     end
   end
 end

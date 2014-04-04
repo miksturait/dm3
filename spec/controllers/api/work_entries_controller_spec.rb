@@ -115,6 +115,10 @@ describe Api::WorkEntriesController do
           it { should eq [] }
         end
       end
+
+      context 'grouping' do
+        pending 'TODO'
+      end
     end
   end
 end
