@@ -116,7 +116,7 @@ describe Api::WorkEntriesController do
         end
       end
 
-      context 'grouping', wip: true do
+      context 'grouping' do
         let(:beginning_of_day) { '2014-02-05T00:00:00Z' }
         let(:beginning_of_week) { '2014-02-03T00:00:00Z' }
         let(:beginning_of_month) { '2014-02-01T00:00:00Z' }
