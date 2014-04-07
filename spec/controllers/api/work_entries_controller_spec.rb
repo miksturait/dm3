@@ -116,8 +116,152 @@ describe Api::WorkEntriesController do
         end
       end
 
-      context 'grouping' do
-        pending 'TODO'
+      context 'grouping', wip: true do
+        let(:beginning_of_day) { '2014-02-05T00:00:00Z' }
+        let(:beginning_of_week) { '2014-02-03T00:00:00Z' }
+        let(:beginning_of_month) { '2014-02-01T00:00:00Z' }
+
+        context 'group by day' do
+          let!(:call) { get 'index', format: :json, group_by: %w(day) }
+          it { should eq({
+              beginning_of_day => [work_entry_1_json, work_entry_2_json, work_entry_3_json]
+            })
+          }
+        end
+
+        context 'group by week' do
+          let!(:call) { get 'index', format: :json, group_by: %w(week) }
+          it { should eq({
+              beginning_of_week => [work_entry_1_json, work_entry_2_json, work_entry_3_json]
+            })
+          }
+        end
+
+        context 'group by month' do
+          let!(:call) { get 'index', format: :json, group_by: %w(month) }
+          it { should eq({
+              beginning_of_month => [work_entry_1_json, work_entry_2_json, work_entry_3_json]
+            })
+          }
+        end
+
+        context 'group by coworker' do
+          let!(:call) { get 'index', format: :json, group_by: %w(coworker) }
+          it { should eq({
+              coworker_1.id.to_s => [work_entry_1_json],
+              coworker_2.id.to_s => [work_entry_2_json],
+              coworker_3.id.to_s => [work_entry_3_json]
+            })
+          }
+        end
+
+        context 'group by day and coworker' do
+          let!(:call) { get 'index', format: :json, group_by: %w(day coworker) }
+          it { should eq({
+              beginning_of_day => {
+                coworker_1.id.to_s => [work_entry_1_json],
+                coworker_2.id.to_s => [work_entry_2_json],
+                coworker_3.id.to_s => [work_entry_3_json]
+              }
+            })
+          }
+        end
+
+        context 'group by week and coworker' do
+          let!(:call) { get 'index', format: :json, group_by: %w(week coworker) }
+          it { should eq({
+              beginning_of_week => {
+                coworker_1.id.to_s => [work_entry_1_json],
+                coworker_2.id.to_s => [work_entry_2_json],
+                coworker_3.id.to_s => [work_entry_3_json]
+              }
+            })
+          }
+        end
+
+        context 'group by month and coworker' do
+          let!(:call) { get 'index', format: :json, group_by: %w(month coworker) }
+          it { should eq({
+              beginning_of_month => {
+                coworker_1.id.to_s => [work_entry_1_json],
+                coworker_2.id.to_s => [work_entry_2_json],
+                coworker_3.id.to_s => [work_entry_3_json]
+              }
+            })
+          }
+        end
+
+        context 'group by coworker and day' do
+          let!(:call) { get 'index', format: :json, group_by: %w(coworker day) }
+          it { should eq({
+              coworker_1.id.to_s => {
+                beginning_of_day => [work_entry_1_json]
+              },
+              coworker_2.id.to_s => {
+                beginning_of_day => [work_entry_2_json]
+              },
+              coworker_3.id.to_s => {
+                beginning_of_day => [work_entry_3_json]
+              }
+            })
+          }
+        end
+
+        context 'group by coworker and week' do
+          let!(:call) { get 'index', format: :json, group_by: %w(coworker week) }
+          it { should eq({
+              coworker_1.id.to_s => {
+                beginning_of_week => [work_entry_1_json]
+              },
+              coworker_2.id.to_s => {
+                beginning_of_week => [work_entry_2_json]
+              },
+              coworker_3.id.to_s => {
+                beginning_of_week => [work_entry_3_json]
+              }
+            })
+          }
+        end
+
+        context 'group by coworker and month' do
+          let!(:call) { get 'index', format: :json, group_by: %w(coworker month) }
+          it { should eq({
+              coworker_1.id.to_s => {
+                beginning_of_month => [work_entry_1_json]
+              },
+              coworker_2.id.to_s => {
+                beginning_of_month => [work_entry_2_json]
+              },
+              coworker_3.id.to_s => {
+                beginning_of_month => [work_entry_3_json]
+              }
+            })
+          }
+        end
+
+        context 'invalid grouping' do
+          subject { response }
+
+          context 'non existed parameters' do
+            let!(:call) { get 'index', format: :json, group_by: %w(coworker bla-bla) }
+            its(:status) { should eq 422 }
+          end
+
+          context 'duplicated group by' do
+            let!(:call) { get 'index', format: :json, group_by: %w(coworker coworker) }
+            its(:status) { should eq 422 }
+          end
+
+          context 'too much parameters' do
+            let!(:call) { get 'index', format: :json, group_by: %w(coworker day month) }
+            its(:status) { should eq 422 }
+          end
+
+          context 'combined dates' do
+            let!(:call) { get 'index', format: :json, group_by: %w(day week) }
+            its(:status) { should eq 422 }
+          end
+        end
       end
     end
   end
