@@ -22,7 +22,11 @@ class Api::WorkEntriesController < Api::ApplicationController
     scope = scope.work_unit_id_eq(time_entry_params[:work_unit_id]) if time_entry_params[:work_unit_id].present?
     scope = scope.after_start_time(time_entry_params[:after]) if time_entry_params[:after].present?
     scope = scope.before_start_time(time_entry_params[:before]) if time_entry_params[:before].present?
-    scope = scope.limit(100)
+    if params[:page].present?
+      scope = scope.page(params[:page])
+      scope = scope.per(params[:limit]) if params[:limit].present?
+    end
+
     if group_by_param_exists?
       group_time_entries(scope).to_json
     else

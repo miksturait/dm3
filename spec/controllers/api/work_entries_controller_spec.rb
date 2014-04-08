@@ -64,7 +64,20 @@ describe Api::WorkEntriesController do
       end
 
       context 'pagination' do
-        pending 'TODO'
+        context 'page 1' do
+          let!(:call) { get 'index', format: :json, page: 1, limit: 2 }
+          it { should eq [work_entry_1_json, work_entry_2_json] }
+        end
+
+        context 'page 2' do
+          let!(:call) { get 'index', format: :json, page: 2, limit: 2 }
+          it { should eq [work_entry_3_json] }
+        end
+
+        context 'page 3' do
+          let!(:call) { get 'index', format: :json, page: 3, limit: 2 }
+          it { should eq [] }
+        end
       end
 
       context 'filter with coworkers' do
