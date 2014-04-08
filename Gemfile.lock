@@ -416,6 +416,7 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jira-ruby
   jquery-rails
+  kaminari
   omniauth
   omniauth-google-oauth2
   passenger
