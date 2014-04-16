@@ -3,7 +3,7 @@
 DiamondMine3-Work-Track&Schedule
 
 Simply Scheduling per week / work unit / co-worker.
-Additional it allowing to track workload per day / work unit / co-worker
+Additionaly it allows tracking workload per day / work unit / co-worker
 
 ## Prerequisites
 
@@ -33,7 +33,6 @@ rake db:setup
 
 
 #### Production
-
 
 ## To the rescue!
 

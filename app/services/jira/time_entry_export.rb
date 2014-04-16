@@ -19,6 +19,7 @@ module Jira
         if worklog_object
           if save_worklog!
             save_message("Saved #{seconds_spent.to_s} for #{issue_identifier} ")
+            log('worklog saved')
             success!
           else
             save_error("Cannot save worklog for #{seconds_spent} seconds")
@@ -33,11 +34,22 @@ module Jira
 
     private
 
+    def logger
+      @@jira_looger ||= ::Logger.new("log/jira_export.log")
+    end
+
     def save_worklog!
       if Rails.env.production?
         on_opened_issue do
+          log("Saving workload: #{seconds_spent.to_s} @ #{date_as_text}T#{time_as_text}.000+0000")
           worklog_object.save({'timeSpentSeconds' => seconds_spent.to_s,
-                               'started' => "#{date_as_text}T#{time_as_text}.000+0000"})
+                               'started' => "#{date_as_text}T#{time_as_text}.000+0000"}).tap do |result|
+            if result
+              log('worklog saved')
+            else
+              log('failed to save worklog')
+            end
+          end
         end
       else
         true
@@ -45,21 +57,32 @@ module Jira
     end
 
     def on_opened_issue
+      log("issue status: #{jira_issue.status.name}")
       if issue_closed?
+        log('issue is closed...')
         open_issue!
-        yield
+        result = yield
         close_issue!
       else
-        yield
+        result = yield
       end
+      result
     end
 
     def open_issue!
-      apply_transition(3)
+      if apply_transition(3)
+        log('opening...')
+      else
+        log('failed to open!')
+      end
     end
 
     def close_issue!
-      apply_transition(2)
+      if apply_transition(2)
+        log('closing...')
+      else
+        log('failed to close!')
+      end
     end
 
     def apply_transition(transition_id)
@@ -96,7 +119,7 @@ module Jira
     end
 
     def jira_issue
-     @jira_issue ||= begin
+      @jira_issue ||= begin
         jira_client.Issue.find(issue_identifier)
       rescue JIRA::HTTPError
         save_error("Cannot find issue #{issue_identifier}")
@@ -129,5 +152,9 @@ module Jira
     end
 
     alias_method :save_error, :save_message
+
+    def log(message)
+      logger.info "#{Time.zone.now} WUID:#{work_unit_id} [#{issue_identifier}] #{message}"
+    end
   end
 end
