@@ -16,7 +16,7 @@ gem 'omniauth-google-oauth2'
 gem 'pg'
 gem 'rolify'
 gem 'simple_form', '>= 3.0.0.rc'
-
+gem 'kaminari'
 gem 'ancestry'
 gem 'time_diff'
 gem 'youtrack_api', git: 'https://github.com/eisnerd/youtrack-rest-ruby-library.git'
@@ -68,4 +68,5 @@ group :test do
   gem 'shoulda-matchers'
   gem 'vcr'
   gem 'webmock'
+  gem 'fuubar'
 end
