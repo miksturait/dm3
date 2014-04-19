@@ -10,4 +10,14 @@ ActiveAdmin.register Work::UnitTarget, as: "Company/Project Target" do
     end
     f.actions
   end
+
+  index do
+    column :work_unit
+    column :period
+    column 'Hours Booked', :cache_of_total_hours
+
+    actions
+  end
+
+  filter :work_unit
 end

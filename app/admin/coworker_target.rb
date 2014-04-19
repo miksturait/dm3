@@ -1,4 +1,4 @@
-ActiveAdmin.register Work::CoworkerTarget, as: "Target" do
+ActiveAdmin.register Work::CoworkerTarget, as: "Coworker Target" do
   menu parent: "Schedule", priority: 2
   permit_params :work_unit_id, :coworker_id, :hours_per_day, :period
 
@@ -11,4 +11,17 @@ ActiveAdmin.register Work::CoworkerTarget, as: "Target" do
     end
     f.actions
   end
+
+  index do
+    column :work_unit
+    column :coworker
+    column :period
+    column 'avg Daily', :hours_per_day
+    column 'Total Hours', :cache_of_total_hours
+
+    actions
+  end
+
+  filter :work_unit
+  filter :coworker
 end

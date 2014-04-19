@@ -12,4 +12,14 @@ ActiveAdmin.register Project do
     f.actions
   end
 
+  index do
+    column :name
+    column :wuid
+    column :opts
+
+    actions
+  end
+
+  filter :name
+  filter :wuid
 end

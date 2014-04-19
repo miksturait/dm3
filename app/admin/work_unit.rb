@@ -23,4 +23,24 @@ ActiveAdmin.register Work::Unit do
 
     f.actions
   end
+
+
+  index do
+    column 'Parent' do |work_unit|
+      if work_unit.parent
+        work_unit.parent.name
+      else
+        "none"
+      end
+    end
+    column :name
+    column :wuid
+    column :period
+    column :opts
+
+    actions
+  end
+
+  filter :name
+  filter :wuid
 end

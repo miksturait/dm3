@@ -11,4 +11,18 @@ ActiveAdmin.register Phase do
 
     f.actions
   end
+
+  index do
+    column 'Project' do |phase|
+      phase.parent.name
+    end
+    column :name
+    column :period
+    column :opts
+
+    actions
+  end
+
+  filter :name
+  filter :wuid
 end
