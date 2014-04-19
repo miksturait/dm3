@@ -1,4 +1,4 @@
-class Work::CoworkerTarget < ActiveRecord::Base
+class Work::CoworkerTarget < Work::Target
   belongs_to :work_unit, class_name: Work::Unit
   belongs_to :coworker, class_name: Coworker
   has_many :daily_targets, class_name: Work::DailyCoworkerTarget

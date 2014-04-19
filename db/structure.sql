@@ -134,39 +134,6 @@ ALTER SEQUENCE admin_users_id_seq OWNED BY admin_users.id;
 
 
 --
--- Name: coworker_targets; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE coworker_targets (
-    id integer NOT NULL,
-    coworker_id integer,
-    work_unit_id integer,
-    hours_per_day integer DEFAULT 8,
-    period daterange,
-    cache_of_total_hours integer
-);
-
-
---
--- Name: coworker_targets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE coworker_targets_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: coworker_targets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE coworker_targets_id_seq OWNED BY coworker_targets.id;
-
-
---
 -- Name: coworkers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -336,6 +303,40 @@ CREATE TABLE schema_migrations (
 
 
 --
+-- Name: targets; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE targets (
+    id integer NOT NULL,
+    coworker_id integer,
+    work_unit_id integer,
+    hours_per_day integer DEFAULT 8,
+    period daterange,
+    cache_of_total_hours integer,
+    type character varying(255)
+);
+
+
+--
+-- Name: targets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE targets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: targets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE targets_id_seq OWNED BY targets.id;
+
+
+--
 -- Name: time_entries; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -467,13 +468,6 @@ ALTER TABLE ONLY admin_users ALTER COLUMN id SET DEFAULT nextval('admin_users_id
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY coworker_targets ALTER COLUMN id SET DEFAULT nextval('coworker_targets_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY coworkers ALTER COLUMN id SET DEFAULT nextval('coworkers_id_seq'::regclass);
 
 
@@ -503,6 +497,13 @@ ALTER TABLE ONLY jira_exports ALTER COLUMN id SET DEFAULT nextval('jira_exports_
 --
 
 ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY targets ALTER COLUMN id SET DEFAULT nextval('targets_id_seq'::regclass);
 
 
 --
@@ -546,7 +547,7 @@ ALTER TABLE ONLY admin_users
 -- Name: coworker_targets_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
-ALTER TABLE ONLY coworker_targets
+ALTER TABLE ONLY targets
     ADD CONSTRAINT coworker_targets_pkey PRIMARY KEY (id);
 
 
@@ -745,3 +746,9 @@ INSERT INTO schema_migrations (version) VALUES ('20140103090005');
 INSERT INTO schema_migrations (version) VALUES ('20140103193026');
 
 INSERT INTO schema_migrations (version) VALUES ('20140227134512');
+
+INSERT INTO schema_migrations (version) VALUES ('20140419093020');
+
+INSERT INTO schema_migrations (version) VALUES ('20140419093126');
+
+INSERT INTO schema_migrations (version) VALUES ('20140419093336');
