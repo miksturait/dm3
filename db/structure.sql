@@ -171,7 +171,7 @@ CREATE TABLE daily_coworker_targets (
     id integer NOT NULL,
     work_unit_id integer,
     coworker_id integer,
-    coworker_target_id integer,
+    target_id integer,
     day date,
     hours integer
 );
@@ -752,3 +752,5 @@ INSERT INTO schema_migrations (version) VALUES ('20140419093020');
 INSERT INTO schema_migrations (version) VALUES ('20140419093126');
 
 INSERT INTO schema_migrations (version) VALUES ('20140419093336');
+
+INSERT INTO schema_migrations (version) VALUES ('20140419094302');

@@ -22,7 +22,7 @@ describe Work::EnsureEachDayForCoworkerTarget do
       subject { Work::DailyCoworkerTarget.last }
 
       its(:day) { should eq(five_working_days.last) }
-      its(:coworker_target_id) { should eq(1) }
+      its(:target_id) { should eq(1) }
       its(:work_unit_id) { should eq(2) }
       its(:coworker_id) { should eq(3) }
       its(:hours) { should eq(8) }
@@ -47,7 +47,7 @@ describe Work::EnsureEachDayForCoworkerTarget do
       subject { coworker_target.daily_targets.last }
 
       its(:day) { should eq(three_working_days.last) }
-      its(:coworker_target_id) { should eq(1) }
+      its(:target_id) { should eq(1) }
       its(:work_unit_id) { should eq(5) }
       its(:coworker_id) { should eq(3) }
       its(:hours) { should eq(4) }
