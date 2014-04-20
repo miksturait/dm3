@@ -1,5 +1,5 @@
 ActiveAdmin.register Work::UnitTarget, as: "Company/Project Target" do
-  menu parent: "Schedule"
+  menu parent: "Finance"
   permit_params :work_unit_id, :invoice_id, :hours_per_day, :period
 
   form do |f|
@@ -14,6 +14,7 @@ ActiveAdmin.register Work::UnitTarget, as: "Company/Project Target" do
 
   index do
     column :work_unit
+    column :invoice
     column :period
     column 'Hours Booked', :cache_of_total_hours
 

@@ -12,8 +12,6 @@ class Finance::Invoice < ActiveRecord::Base
     "[#{hours_booked}h] :: #{number} :: #{customer_name}"
   end
 
-  private
-
   def hours_booked
     targets.sum(:cache_of_total_hours)
   end

@@ -4,4 +4,14 @@ ActiveAdmin.register Finance::Invoice, as: 'Invoices' do
 
   filter :number
   filter :customer_name
+
+  index do
+    column :number
+    column :customer_name
+    column :euro
+    column :hours_booked, sortable: false
+    column :invoice_lines
+
+    actions
+  end
 end
