@@ -2,6 +2,48 @@ require 'spec_helper'
 
 describe Dm2::ApiController do
 
+  context "refactor dm2 controller", :focus do
+    xit "move logic to dashbaord controller"
+    xit "update dm2 code (link)"
+    xit "deploy & test"
+  end
+
+  context "create new end point for invoices", :focus do
+    # Finance::Invoice Object
+    # * DM2 Invoice Id
+    # * Customer Name
+    # * Line Items { 'title' => 'value'}
+
+    xit "allow to create invoice object, return id object"
+
+    # Add Fields to Invoice
+    # * dm3_id
+    # * pushed_at
+    # Logic should be in service object
+    xit "push notifications from dm2 (after invoice save)"
+
+    xit "deploy & test"
+
+    # * HABTM Work::Target
+    xit "allow to link target with invoice"
+  end
+
+  context "Finance Information", :focus do
+    # [
+    #   { diff: -34, client: 'Metreno', status: [0..10] },
+    #   { ... },
+    #   ...
+    # ]
+
+    xit "api for finance dashboard"
+
+    xit "service object that calculate / sort data / quantify situaion"
+
+
+    # round boubles with diff number / small name of client and color
+    xit "dashboard with info about hours diff (worked vs bought) in dm2"
+  end
+
   describe "GET 'workload_import'" do
     context "failure" do
       let!(:call) {
@@ -109,9 +151,9 @@ describe Dm2::ApiController do
                            }
                        },
                        "team" => {
-                           "this_week"=>{},
-                           "this_month"=>{},
-                           "last_month"=>{}}
+                           "this_week" => {},
+                           "this_month" => {},
+                           "last_month" => {}}
                    }) }
   end
 
