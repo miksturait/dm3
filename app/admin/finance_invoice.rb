@@ -10,7 +10,7 @@ ActiveAdmin.register Finance::Invoice, as: 'Invoices' do
     column :customer_name
     column :euro
     column :hours_booked, sortable: false
-    column :invoice_lines
+    column :line_items
 
     actions
   end
