@@ -1,6 +1,6 @@
 $ ->
   $(".daterangepicker").datepicker
-    defaultDate: "2013-12-10"
+    defaultDate: "<%= Date.now.strftime('%Y-%m-%d') %>"
     dateFormat: "yy-mm-dd"
     changeMonth: true
     numberOfMonths: 1
