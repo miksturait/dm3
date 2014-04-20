@@ -114,5 +114,4 @@ describe Dm2::DashboardController do
                    }) }
   end
 
-  pending 'get - summary'
 end
