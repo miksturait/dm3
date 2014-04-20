@@ -9,6 +9,7 @@ ActiveAdmin.register Finance::Invoice, as: 'Invoices' do
     column :number
     column :customer_name
     column :euro
+    column :paid_at
     column :hours_booked, sortable: false
     column :line_items
 
