@@ -83,8 +83,6 @@ describe Dm2::FinanceController do
   end
 
   context "create new end point for invoices", :focus do
-    xit "deploy & test"
-
     # * HABTM Work::Target
     xit "allow to link target with invoice"
   end
