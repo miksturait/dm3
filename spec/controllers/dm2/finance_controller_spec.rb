@@ -15,7 +15,8 @@ describe Dm2::FinanceController do
               line_items: {
                   'Some item one ' => 4598,
                   'Another item' => 12343
-              }
+              },
+              euro: 16941
           }
       }
     }
@@ -24,32 +25,28 @@ describe Dm2::FinanceController do
     subject(:return_message) { JSON.parse(response.body) }
 
     it { should eq({
-                       "status" => "OK",
-                       "id" => invoice.id
+                       "status" => "ok",
+                       "invoice" => {
+                           "id" => invoice.id
+                       }
                    })
     }
 
     context "invoice fields" do
       subject { invoice }
 
-      its(:dm2_id) { should eq('234') }
+      its(:dm2_id) { should eq(234) }
       its(:number) { should eq('22/2014') }
       its(:customer_name) { should eq('Statoil') }
       its(:line_items) { should eq({
-                                       'Some item one ' => 4598,
-                                       'Another item' => 12343
+                                       'Some item one ' => "4598",
+                                       'Another item' => "12343"
                                    }) }
+      its(:euro) { should eq(16941) }
     end
   end
 
   context "create new end point for invoices", :focus do
-    # Finance::Invoice Object
-    # * DM2 Invoice Id
-    # * Customer Name
-    # * Line Items { 'title' => 'value'}
-
-    xit "allow to create invoice object, return id object"
-
     # Add Fields to Invoice
     # * dm3_id
     # * pushed_at

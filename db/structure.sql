@@ -228,6 +228,41 @@ ALTER SEQUENCE days_off_periods_id_seq OWNED BY days_off_periods.id;
 
 
 --
+-- Name: finance_invoices; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE finance_invoices (
+    id integer NOT NULL,
+    dm2_id integer,
+    number character varying(255),
+    customer_name text,
+    line_items hstore,
+    euro integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: finance_invoices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE finance_invoices_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: finance_invoices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE finance_invoices_id_seq OWNED BY finance_invoices.id;
+
+
+--
 -- Name: jira_exports; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -489,6 +524,13 @@ ALTER TABLE ONLY days_off_periods ALTER COLUMN id SET DEFAULT nextval('days_off_
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY finance_invoices ALTER COLUMN id SET DEFAULT nextval('finance_invoices_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY jira_exports ALTER COLUMN id SET DEFAULT nextval('jira_exports_id_seq'::regclass);
 
 
@@ -573,6 +615,14 @@ ALTER TABLE ONLY daily_coworker_targets
 
 ALTER TABLE ONLY days_off_periods
     ADD CONSTRAINT days_off_periods_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: finance_invoices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY finance_invoices
+    ADD CONSTRAINT finance_invoices_pkey PRIMARY KEY (id);
 
 
 --
@@ -754,3 +804,5 @@ INSERT INTO schema_migrations (version) VALUES ('20140419093126');
 INSERT INTO schema_migrations (version) VALUES ('20140419093336');
 
 INSERT INTO schema_migrations (version) VALUES ('20140419094302');
+
+INSERT INTO schema_migrations (version) VALUES ('20140420133512');
