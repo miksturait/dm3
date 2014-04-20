@@ -11,9 +11,9 @@ Dm3::Application.routes.draw do
   end
 
   namespace :dm2 do
-    get "api/workload_import"
-    get "api/statistics"
-    get "api/summary"
-    get "api/work_units"
+    get "dashboard/workload_import"
+    get "dashboard/statistics"
+    get "dashboard/summary"
+    get "dashboard/work_units"
   end
 end
