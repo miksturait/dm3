@@ -81,9 +81,4 @@ describe Dm2::FinanceController do
 
     it { expect { create_once_again }.to change { invoice.reload.euro }.from(16941).to(2000) }
   end
-
-  context "create new end point for invoices", :focus do
-    # * HABTM Work::Target
-    xit "allow to link target with invoice"
-  end
 end

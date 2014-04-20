@@ -4,3 +4,4 @@
 #= require select2
 #= require lib/daterange_datepicker
 #= require lib/autocompleter_work_unit
+#= require lib/formtastic_select2

@@ -348,7 +348,8 @@ CREATE TABLE targets (
     hours_per_day integer DEFAULT 8,
     period daterange,
     cache_of_total_hours integer,
-    type character varying(255)
+    type character varying(255),
+    invoice_id integer
 );
 
 
@@ -806,3 +807,5 @@ INSERT INTO schema_migrations (version) VALUES ('20140419093336');
 INSERT INTO schema_migrations (version) VALUES ('20140419094302');
 
 INSERT INTO schema_migrations (version) VALUES ('20140420133512');
+
+INSERT INTO schema_migrations (version) VALUES ('20140420172729');

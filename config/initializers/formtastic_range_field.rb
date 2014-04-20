@@ -13,5 +13,8 @@ module Formtastic
 
     class HstoreInput < Formtastic::Inputs::StringInput
     end
+
+    class Select2Input < Formtastic::Inputs::SelectInput
+    end
   end
 end
