@@ -1,12 +1,6 @@
 require 'spec_helper'
 
 describe Dm2::ApiController do
-
-  context "refactor dm2 controller", :focus do
-    xit "update dm2 code (link)"
-    xit "deploy & test"
-  end
-
   context "create new end point for invoices", :focus do
     # Finance::Invoice Object
     # * DM2 Invoice Id
