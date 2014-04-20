@@ -15,5 +15,6 @@ Dm3::Application.routes.draw do
     get "dashboard/statistics"
     get "time/summary"
     get "api/work_units"
+    get "finance/create_invoice"
   end
 end

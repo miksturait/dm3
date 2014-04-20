@@ -1,25 +1,6 @@
 require 'spec_helper'
 
 describe Dm2::ApiController do
-  context "create new end point for invoices", :focus do
-    # Finance::Invoice Object
-    # * DM2 Invoice Id
-    # * Customer Name
-    # * Line Items { 'title' => 'value'}
-
-    xit "allow to create invoice object, return id object"
-
-    # Add Fields to Invoice
-    # * dm3_id
-    # * pushed_at
-    # Logic should be in service object
-    xit "push notifications from dm2 (after invoice save)"
-
-    xit "deploy & test"
-
-    # * HABTM Work::Target
-    xit "allow to link target with invoice"
-  end
 
   context "Finance Information", :focus do
     # [
@@ -59,5 +40,5 @@ describe Dm2::ApiController do
     xit "if google calender - rething how it should works"
   end
 
-
+  pending "work units fetching"
 end
