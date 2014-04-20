@@ -3,6 +3,9 @@ class Finance::Invoice < ActiveRecord::Base
   validates :number, presence: true
   validates :customer_name, presence: true
 
+
+  default_scope -> { order(number: :desc) }
+
   has_many :targets, class_name: Work::Target
 
   def name
