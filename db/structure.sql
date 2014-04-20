@@ -239,7 +239,8 @@ CREATE TABLE finance_invoices (
     line_items hstore,
     euro integer,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    paid_at date
 );
 
 
@@ -809,3 +810,5 @@ INSERT INTO schema_migrations (version) VALUES ('20140419094302');
 INSERT INTO schema_migrations (version) VALUES ('20140420133512');
 
 INSERT INTO schema_migrations (version) VALUES ('20140420172729');
+
+INSERT INTO schema_migrations (version) VALUES ('20140420184215');

@@ -16,7 +16,8 @@ describe Dm2::FinanceController do
                   'Some item one ' => 4598,
                   'Another item' => 12343
               },
-              euro: 16941
+              euro: 16941,
+              paid_at: '2014-04-12'
           }
       }
     }
@@ -43,21 +44,22 @@ describe Dm2::FinanceController do
                                        'Another item' => "12343"
                                    }) }
       its(:euro) { should eq(16941) }
+      its(:paid_at) { should eq(Date.parse('2014-04-12')) }
     end
 
   end
 
   describe "Invoice Update" do
     let!(:invoice) { ::Finance::Invoice.create({
-                                                        dm2_id: 234,
-                                                        number: '22/2014',
-                                                        customer_name: 'Statoil',
-                                                        line_items: {
-                                                            'Some item one ' => 4598,
-                                                            'Another item' => 12343
-                                                        },
-                                                        euro: 16941
-                                                    })}
+                                                   dm2_id: 234,
+                                                   number: '22/2014',
+                                                   customer_name: 'Statoil',
+                                                   line_items: {
+                                                       'Some item one ' => 4598,
+                                                       'Another item' => 12343
+                                                   },
+                                                   euro: 16941
+                                               }) }
     let(:create_once_again) {
       # get because something is f* with combination ruby 1.8.x / rails 2.x / some gems
       #     -> resulting that post isn't working at all
