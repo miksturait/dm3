@@ -93,7 +93,5 @@ describe Dm2::FinanceController do
 
       it { expect_any_instance_of(Finance::HealthCheck).to receive(:data_hash).and_return([]); call }
     end
-
-    xit "dashboard with info about hours diff (worked vs bought) in dm2"
   end
 end
