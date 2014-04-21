@@ -10,7 +10,7 @@ class Dm2::FinanceController < Dm2::ApiController
   end
 
   def healthcheck
-    render json: healthcheck_data.hash
+    render json: { data: healthcheck_data.hash, status: :ok }
   end
 
   private
