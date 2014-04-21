@@ -9,6 +9,8 @@ class Customer < Work::Unit
                 message: 'should be unset'
             }
 
+  scope :skip_internall, -> { where("NOT opts @> hstore('internall', 'true')")}
+
   private
 
   def children_class

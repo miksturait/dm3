@@ -110,7 +110,7 @@ class Finance::HealthCheck < Struct.new(:year)
 
   class ActiveCustomers
     def self.all(period)
-      ::Customer.all.each_with_object({}) do |customer, memo|
+      ::Customer.skip_internall.all.each_with_object({}) do |customer, memo|
         FetchData.new(customer, period).tap do |customer_data|
           memo[customer] =
               CustomerData.new(customer_data.hours_worked,
