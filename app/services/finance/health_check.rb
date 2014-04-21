@@ -1,0 +1,2 @@
+class Finance::HealthCheck
+end

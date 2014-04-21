@@ -83,4 +83,10 @@ describe Dm2::FinanceController do
 
     it { expect { create_once_again }.to change { invoice.reload.euro }.from(16941).to(2000) }
   end
+
+  describe "Health Check", :focus do
+    xit "api for finance dashboard"
+
+    xit "dashboard with info about hours diff (worked vs bought) in dm2"
+  end
 end

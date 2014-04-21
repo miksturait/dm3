@@ -1,23 +1,6 @@
 require 'spec_helper'
 
 describe Dm2::ApiController do
-
-  context "Finance Information", :focus do
-    # [
-    #   { diff: -34, client: 'Metreno', status: [0..10] },
-    #   { ... },
-    #   ...
-    # ]
-
-    xit "api for finance dashboard"
-
-    xit "service object that calculate / sort data / quantify situaion"
-
-
-    # round boubles with diff number / small name of client and color
-    xit "dashboard with info about hours diff (worked vs bought) in dm2"
-  end
-
   context "Bonus :-) :: Allow to create Target Together with creating Invoice", :focus do
     xit "extend the push api"
 
