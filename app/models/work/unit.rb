@@ -3,6 +3,7 @@ class Work::Unit < ActiveRecord::Base
   has_ancestry cache_depth: true
   has_many :time_entries, class_name: Work::TimeEntry
   has_many :coworker_targets, class_name: Work::CoworkerTarget
+  has_many :customer_targets, class_name: Work::UnitTarget, foreign_key: :work_unit_id
 
   validates :wuid, presence: true, if: Proc.new { |work_unit| work_unit.type.blank? }
   validates :wuid,

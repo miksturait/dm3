@@ -1,10 +1,13 @@
-# Read about factories at https://github.com/thoughtbot/factory_girl
-
 FactoryGirl.define do
+  sequence :uniqid do |n|
+    n
+  end
+
   factory :finance_invoice, :class => 'Finance::Invoice' do
-    dm2_id 1
-    number "MyString"
-    customer_name "MyText"
-    line_items ""
+    dm2_id { generate(:uniqid) }
+    number { "#{generate(:uniqid)} / #{Time.now.year}"}
+    customer_name { "Some Customer [#{generate(:uniqid)}]" }
+    euro { rand(10000) + 2000 }
+    paid_at nil
   end
 end

@@ -11,6 +11,8 @@ class Work::Target < ActiveRecord::Base
   delegate :working_hours, :working_days, to: :calculate_working_hours
   delegate :begin, :end, to: :period, prefix: true, allow_nil: true
 
+  scope :within_period, ->(range) { where(["period && daterange(?,?, '[]')", range.begin.to_s, range.end.to_s]) }
+
   private
 
   def inherit_period_from_work_unit
