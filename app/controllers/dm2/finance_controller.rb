@@ -9,6 +9,10 @@ class Dm2::FinanceController < Dm2::ApiController
     }
   end
 
+  def healthcheck
+    render json: healthcheck_data.hash
+  end
+
   private
 
   def invoice
@@ -28,5 +32,10 @@ class Dm2::FinanceController < Dm2::ApiController
     params.require(:invoice).permit(:dm2_id, :number, :customer_name, :euro, :paid_at).tap do |permited_params|
       permited_params[:line_items] = params[:invoice][:line_items].permit!
     end
+  end
+
+  def healthcheck_data
+    @healthcheck_data ||=
+        Finance::HealthCheck.new(Date.today.year)
   end
 end

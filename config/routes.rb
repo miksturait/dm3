@@ -16,5 +16,6 @@ Dm3::Application.routes.draw do
     get "time/summary"
     get "api/work_units"
     get "finance/create_invoice"
+    get "finance/healthcheck"
   end
 end

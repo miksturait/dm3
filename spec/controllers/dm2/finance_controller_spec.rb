@@ -84,8 +84,15 @@ describe Dm2::FinanceController do
     it { expect { create_once_again }.to change { invoice.reload.euro }.from(16941).to(2000) }
   end
 
-  describe "Health Check", :focus do
-    xit "api for finance dashboard"
+  describe "Health Check" do
+    context "data for finance dashboard" do
+      let(:call) { get "healthcheck", { auth_token: '9552211f1ac89d0bb10863a71a92' }
+      }
+
+      it { expect(Finance::HealthCheck).to receive(:new).with(Date.today.year); call }
+
+      it { expect_any_instance_of(Finance::HealthCheck).to receive(:hash).and_return([]); call }
+    end
 
     xit "dashboard with info about hours diff (worked vs bought) in dm2"
   end
