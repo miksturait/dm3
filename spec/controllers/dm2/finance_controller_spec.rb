@@ -91,7 +91,7 @@ describe Dm2::FinanceController do
 
       it { expect(Finance::HealthCheck).to receive(:new).with(Date.today.year); call }
 
-      it { expect_any_instance_of(Finance::HealthCheck).to receive(:hash).and_return([]); call }
+      it { expect_any_instance_of(Finance::HealthCheck).to receive(:data_hash).and_return([]); call }
     end
 
     xit "dashboard with info about hours diff (worked vs bought) in dm2"
