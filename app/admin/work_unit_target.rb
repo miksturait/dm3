@@ -22,4 +22,21 @@ ActiveAdmin.register Work::UnitTarget, as: "Company/Project Target" do
   end
 
   filter :work_unit
+
+  collection_action :calculate_working_hours, method: :get do
+    render json: {total_hours: calculating_working_hours_object.working_hours}
+  end
+
+  controller do
+    private_methods
+
+    def calculating_working_hours_object
+      Work::CalculateWorkingHours.new(period, nil, params[:hours_per_day].to_i)
+    end
+
+    def period
+      Range.new(Date.parse(params[:start]), Date.parse(params[:end]))
+    end
+
+  end
 end
