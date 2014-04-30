@@ -2,6 +2,7 @@ ActiveAdmin.register Work::TimeEntry do
   menu parent: "Work Unit's", priority: 6
 
   index do
+    selectable_column
     column :label
     column :comment
     column 'coworker' do |time_entry|
