@@ -4,10 +4,21 @@ class Finance::HealthCheck < Struct.new(:year)
   end
 
   def data_hash
-    customers_data.collect { |customer, data| CustomerHash.new(customer, data).to_hash }
+    customers_data.collect do |customer, data|
+      CustomerHash.new(customer, data).to_hash unless data_is_stale(data)
+    end.compact
   end
 
+
   private
+
+  def data_is_stale(data)
+    -16 < data.hours_diff && data.hours_diff < 0 && data.last_time_worked_at < validity_period
+  end
+
+  def validity_period
+    30.days.ago
+  end
 
   def period
     period_begin..period_end

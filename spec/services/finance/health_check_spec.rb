@@ -37,6 +37,8 @@ describe Finance::HealthCheck, :focus do
 
   let(:healthcheck) { described_class.new(2014) }
 
+  before { healthcheck.stub(validity_period: Date.new(2014, 01, 01)) }
+
   it { expect(healthcheck.customers).to match_array([dnb, quantus, statoil]) }
 
   it { expect(healthcheck.data_hash).
