@@ -49,7 +49,6 @@ end
 
 group :development, :test do
   gem 'pry'
-  gem 'pry-debugger'
   gem 'factory_girl_rails'
   gem 'rspec-rails'
   gem 'rspec-mocks', '~> 2.6'
